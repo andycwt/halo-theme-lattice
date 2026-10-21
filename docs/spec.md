@@ -26,7 +26,7 @@
 |---|---|---|
 | 顯示名稱 | Lattice | #16 |
 | `metadata.name` | `theme-lattice`（發布後不可更改） | #16 |
-| GitHub repo | `halo-theme-lattice`（目前尚未設定 remote） | #16 |
+| GitHub repo | https://github.com/andycwt/halo-theme-lattice（2026-10-21 建立，目前為 private；預定階段 10 完成後轉為 public） | #16 |
 | 授權 | MIT | #6 |
 | 版權聲明 | `NOTICE` 中保留 Ethereal（作者：楠南NanNan，MIT）的版權聲明 | #5、#6 |
 | Halo 版本需求 | `requires: ">=2.25.0"` | #8 |
