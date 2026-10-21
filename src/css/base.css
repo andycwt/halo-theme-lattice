@@ -1,0 +1,188 @@
+/* 基礎排版：全站元素的預設外觀，以及文章正文（.prose）的排版 */
+
+html {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-body);
+  font-size: 100%;
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-padding-top: var(--space-8);
+}
+
+body {
+  min-height: 100dvh;
+  font-size: var(--text-base);
+}
+
+::selection {
+  background: var(--c-selection);
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-focus-ring);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+a {
+  color: var(--c-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--duration-fast) var(--ease);
+
+  &:hover {
+    color: var(--c-accent-hover);
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-3xl);
+}
+h2 {
+  font-size: var(--text-2xl);
+}
+h3 {
+  font-size: var(--text-xl);
+}
+h4 {
+  font-size: var(--text-lg);
+}
+h5,
+h6 {
+  font-size: var(--text-base);
+}
+
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--c-border);
+}
+
+/* ---------- 文章正文 ---------- */
+.prose {
+  max-width: var(--content-width);
+  overflow-wrap: break-word;
+
+  & > * + * {
+    margin-top: 1.25em;
+  }
+
+  & :is(h2, h3, h4, h5, h6) {
+    margin-top: 2em;
+    scroll-margin-top: var(--space-8);
+  }
+
+  & :is(h2, h3, h4, h5, h6) + * {
+    margin-top: 0.75em;
+  }
+
+  & :is(ul, ol) {
+    padding-left: 1.5em;
+  }
+
+  & li + li {
+    margin-top: 0.4em;
+  }
+
+  & li::marker {
+    color: var(--c-text-muted);
+  }
+
+  & blockquote {
+    padding: var(--space-2) var(--space-4);
+    border-left: 3px solid var(--c-accent);
+    background: var(--c-accent-soft);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    color: var(--c-text);
+  }
+
+  & :not(pre) > code {
+    padding: 0.15em 0.4em;
+    border-radius: var(--radius-sm);
+    background: var(--c-code-bg);
+    border: 1px solid var(--c-border);
+  }
+
+  & pre {
+    padding: var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--c-code-bg);
+    border: 1px solid var(--c-border);
+    overflow-x: auto;
+    line-height: 1.6;
+    tab-size: 2;
+  }
+
+  & img,
+  & video {
+    border-radius: var(--radius-md);
+    margin-inline: auto;
+  }
+
+  & figcaption {
+    margin-top: var(--space-2);
+    text-align: center;
+    font-size: var(--text-sm);
+    color: var(--c-text-muted);
+  }
+
+  & table {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  & :is(th, td) {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--c-border);
+    text-align: start;
+  }
+
+  & th {
+    background: var(--c-surface);
+    font-weight: 600;
+  }
+
+  & hr {
+    margin-block: 2.5em;
+  }
+
+  & mark {
+    background: var(--c-accent-soft);
+    color: inherit;
+    padding: 0 0.15em;
+    border-radius: var(--radius-sm);
+  }
+
+  & kbd {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--c-border);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-sm);
+    font-size: 0.85em;
+  }
+}

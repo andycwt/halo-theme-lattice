@@ -1,0 +1,144 @@
+/*
+ * 設計 tokens
+ *
+ * 配色全部由一個主色（--lattice-primary，後台色票設定，模板以 inline style 寫入 <html>）推算。
+ * 深淺色用 light-dark() 一次定義，實際模式由 color-scheme 決定：
+ *   data-color-mode="auto"  → 跟隨系統
+ *   data-color-mode="light" → 強制淺色
+ *   data-color-mode="dark"  → 強制深色
+ */
+
+:root {
+  color-scheme: light dark;
+
+  &[data-color-mode="light"] {
+    color-scheme: light;
+  }
+
+  &[data-color-mode="dark"] {
+    color-scheme: dark;
+  }
+
+  /* ---------- 主色 ---------- */
+  --primary: var(--lattice-primary, #2f6bd8);
+
+  /*
+   * 每個顏色先分別算出淺色（-l）與深色（-d）版本，再用 light-dark() 組合。
+   * light-dark() 只出現在最外層，不放進 color-mix() 或相對色語法裡，避免瀏覽器支援差異。
+   */
+
+  /* 中性色：帶一點主色色相，彩度壓低 */
+  --bg-l: oklch(from var(--primary) 0.99 calc(c * 0.04) h);
+  --bg-d: oklch(from var(--primary) 0.18 calc(c * 0.06) h);
+  --surface-l: oklch(from var(--primary) 0.965 calc(c * 0.08) h);
+  --surface-d: oklch(from var(--primary) 0.22 calc(c * 0.08) h);
+  --text-l: oklch(from var(--primary) 0.24 calc(c * 0.12) h);
+  --text-d: oklch(from var(--primary) 0.93 calc(c * 0.04) h);
+  --muted-l: oklch(from var(--primary) 0.47 calc(c * 0.12) h);
+  --muted-d: oklch(from var(--primary) 0.74 calc(c * 0.08) h);
+  --border-l: oklch(from var(--primary) 0.89 calc(c * 0.1) h);
+  --border-d: oklch(from var(--primary) 0.32 calc(c * 0.1) h);
+
+  /*
+   * 強調色（連結、按鈕）：保留主色的色相，只限制亮度與彩度，
+   * 確保在背景上的文字對比 ≥ 4.5:1（WCAG AA）。
+   */
+  --accent-l: oklch(from var(--primary) min(l, 0.48) min(c, 0.2) h);
+  --accent-d: oklch(from var(--primary) max(l, 0.74) min(c, 0.15) h);
+
+  --c-bg: light-dark(var(--bg-l), var(--bg-d));
+  --c-surface: light-dark(var(--surface-l), var(--surface-d));
+  --c-text: light-dark(var(--text-l), var(--text-d));
+  --c-text-muted: light-dark(var(--muted-l), var(--muted-d));
+  --c-border: light-dark(var(--border-l), var(--border-d));
+  --c-accent: light-dark(var(--accent-l), var(--accent-d));
+  /* 強調色上的文字：淺色模式的強調色一定夠暗、深色模式一定夠亮，所以固定用白字或黑字 */
+  --c-on-accent: light-dark(white, oklch(0.18 0 0));
+  --c-accent-hover: light-dark(
+    oklch(from var(--accent-l) calc(l - 0.08) c h),
+    oklch(from var(--accent-d) calc(l + 0.08) c h)
+  );
+  --c-accent-soft: light-dark(
+    color-mix(in oklch, var(--accent-l) 10%, var(--bg-l)),
+    color-mix(in oklch, var(--accent-d) 16%, var(--bg-d))
+  );
+  --c-selection: light-dark(
+    color-mix(in oklch, var(--accent-l) 25%, transparent),
+    color-mix(in oklch, var(--accent-d) 35%, transparent)
+  );
+  --c-code-bg: var(--c-surface);
+  --c-focus-ring: var(--c-accent);
+
+  /* ---------- 字型 ---------- */
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang TC",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft JhengHei", "Microsoft YaHei", "Noto Sans TC",
+    "Noto Sans SC", "Noto Sans CJK TC", "Noto Sans CJK SC", sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  --font-serif:
+    "Iowan Old Style", "Palatino Linotype", Georgia, "Songti TC", "Songti SC", "Noto Serif TC",
+    "Noto Serif SC", "Noto Serif CJK TC", "Noto Serif CJK SC", PMingLiU, SimSun, serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono:
+    ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Cascadia Code", "Liberation Mono",
+    "Noto Sans Mono", monospace;
+
+  /* 正文字型：data-font="serif" 時切換為襯線；--font-custom 由後台「自訂字型」寫入 */
+  --font-base: var(--font-sans);
+  --font-body: var(--font-custom, var(--font-base));
+  --font-heading: var(--font-body);
+
+  &[data-font="serif"] {
+    --font-base: var(--font-serif);
+  }
+
+  /* 簡中介面優先使用簡中字型 */
+  &:lang(zh-CN) {
+    --font-sans:
+      system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", "PingFang TC", "Microsoft JhengHei", "Noto Sans SC",
+      "Noto Sans TC", "Noto Sans CJK SC", "Noto Sans CJK TC", sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji";
+    --font-serif:
+      "Iowan Old Style", "Palatino Linotype", Georgia, "Songti SC", "Songti TC", "Noto Serif SC",
+      "Noto Serif TC", "Noto Serif CJK SC", "Noto Serif CJK TC", SimSun, PMingLiU, serif,
+      "Apple Color Emoji", "Segoe UI Emoji";
+  }
+
+  /* ---------- 字級（流動字級，375px → 1280px） ---------- */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  --text-lg: clamp(1.125rem, 1.07rem + 0.25vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.15rem + 0.45vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.34rem + 0.7vw, 1.875rem);
+  --text-3xl: clamp(1.75rem, 1.5rem + 1.1vw, 2.375rem);
+
+  --leading-tight: 1.35;
+  --leading-normal: 1.8;
+
+  /* ---------- 間距、圓角、陰影、動態 ---------- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 2px light-dark(oklch(0 0 0 / 0.06), oklch(0 0 0 / 0.4));
+  --shadow-md: 0 4px 16px light-dark(oklch(0 0 0 / 0.08), oklch(0 0 0 / 0.45));
+
+  --duration-fast: 120ms;
+  --duration-normal: 200ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---------- 版面 ---------- */
+  --content-width: 46rem;
+}

@@ -1,18 +1,8 @@
-/* 階段 1 的最小樣式，階段 3 會由設計系統取代 */
-body {
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  max-width: 48rem;
-  font-family: system-ui, sans-serif;
-  line-height: 1.6;
-}
+/* 樣式入口：以 @layer 固定層級順序，後面的層優先 */
+@layer reset, tokens, base, layout, components, utilities;
 
-.skip-link {
-  position: absolute;
-  left: -9999px;
-
-  &:focus {
-    left: 1rem;
-    top: 1rem;
-  }
-}
+@import "./reset.css" layer(reset);
+@import "./tokens.css" layer(tokens);
+@import "./base.css" layer(base);
+@import "./components/color-mode-toggle.css" layer(components);
+@import "./utilities.css" layer(utilities);

@@ -7,7 +7,7 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 2（本機開發環境）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
+- **目前狀態**：階段 3（設計系統）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
 - **下一步**：從「第 9 節 實作階段與進度」的第一個未完成階段開始。
 - 專案資料夾已改名為 `halo-theme-lattice`（#17）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。
@@ -261,7 +261,15 @@ halo-theme-lattice/
   - 用環境變數 `HALO_VERSION` 切換 Halo 版本，每個版本使用獨立的資料 volume（`lattice-dev-halo-<版本>`），避免降版造成資料庫不相容
   - 已驗證：Halo 從掛載的目錄辨識出主題，安裝並啟用後，在 `pnpm dev` 執行中修改模板、CSS、語系檔，重新整理就會生效，不需要重啟
   - 第 8.1 節的測試資料尚未準備，留到需要時（階段 6 內容頁面前）再做
-- [ ] **階段 3：設計系統**：CSS 變數與 tokens、主色推算、深淺色模式（含防閃爍腳本與切換按鈕）、字型堆疊、基礎排版
+- [x] **階段 3：設計系統**：CSS 變數與 tokens、主色推算、深淺色模式（含防閃爍腳本與切換按鈕）、字型堆疊、基礎排版（2026-10-21）
+  - CSS 結構：`src/css/main.css` 宣告 `@layer reset, tokens, base, layout, components, utilities`；tokens 在 `tokens.css`，基礎排版與文章正文（`.prose`）在 `base.css`
+  - 建置目標（`vite.config.ts`）：`chrome123`、`edge123`、`firefox128`、`safari18`。這些版本原生支援 CSS 巢狀、`light-dark()`、相對色語法，Vite 不需轉譯
+  - 配色：預設主色 `#2f6bd8`。每個顏色先算淺色與深色兩個版本，再用 `light-dark()` 組合；`light-dark()` 只放在最外層。強調色淺色模式限制亮度 ≤ 0.48、深色模式 ≥ 0.74，強調色上的文字固定白字（淺色模式）或深色字（深色模式）
+  - 對比驗證：用 headless Chrome 測 17 個主色（含純白、純黑、螢光綠、青、黃等極端值）× 深淺兩種模式 × 11 組前景與背景，全部 ≥ 4.5:1（最低 4.85）
+  - 深淺色模式：`<html data-color-mode="auto|light|dark">` 控制 `color-scheme`；鎖定時輸出 `data-color-mode-locked`，不輸出切換按鈕。訪客選擇存在 `localStorage` 的 `lattice-color-mode`；按鈕依序循環「自動 → 淺色 → 深色」
+  - 模板讀取的設定鍵（`theme.config.style.*`，表單在階段 4 加入）：`primaryColor`、`colorMode`、`lockColorMode`、`bodyFont`（`sans`／`serif`）、`customFontUrl`、`customFontFamily`。沒有設定或值不合法時都退回預設值；主色只接受 `#` 開頭的 3–8 位十六進位
+  - 共用片段：`partials/style-head.html`（防閃爍腳本、自訂字型）、`partials/color-mode-toggle.html`；片段中的註解使用 Thymeleaf 註解 `<!--/* */-->`，不會輸出給訪客
+  - 已在 Halo 2.26.0 驗證：預設值渲染、各項設定生效、鎖定模式、切換與重新載入後保留、`<body>` 出現前就已套用訪客選擇（不閃爍）
 - [ ] **階段 4：版面骨架**：`layout` partial、導覽列（含語系切換、搜尋入口）、頁尾、二欄或三欄佈局與響應式、`settings.yaml` 的 `layout` 和 `style` group
 - [ ] **階段 5：側邊欄**：8 個元件、左右側邊欄的 array 設定、吸頂、手機版目錄浮動按鈕
 - [ ] **階段 6：內容頁面**：`index`（含簡介區塊、兩種列表樣式）、`post`（目錄、highlight.js、複製按鈕、留言）、`page`、`archives`、`categories`、`category`、`tags`、`tag`、`author`、分頁

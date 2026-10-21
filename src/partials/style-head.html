@@ -1,0 +1,7 @@
+<!--/* 外觀相關的 <head> 內容：防閃爍腳本、自訂字型 */-->
+<include src="color-mode-script.html" />
+<link
+  th:if="${not #strings.isEmpty(theme.config.style?.customFontUrl)}"
+  rel="stylesheet"
+  th:href="${theme.config.style.customFontUrl}"
+/>
