@@ -1,0 +1,82 @@
+<!--/*
+  全站版面。用法：
+    <include src="layout.html" page="post">
+      <template name="head"><title>...</title></template>
+      主內容
+    </include>
+  props：page — 頁面類型，目前只用來判斷是否套用「文章頁佈局」覆寫（page="post"）
+*/-->
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:with="
+    style=${theme.config.style},
+    colorMode=${#lists.contains({'light', 'dark'}, style?.colorMode) ? style.colorMode : 'auto'},
+    colorModeLocked=${style?.lockColorMode == true},
+    primaryColor=${style?.primaryColor != null and style.primaryColor matches '^#[0-9a-fA-F]{3,8}$' ? style.primaryColor : null},
+    customFontFamily=${#strings.trim(style?.customFontFamily)}
+  "
+  th:lang="${#locale.toLanguageTag()}"
+  th:data-color-mode="${colorMode}"
+  th:data-color-mode-locked="${colorModeLocked ? 'true' : null}"
+  th:data-font="${style?.bodyFont == 'serif' ? 'serif' : 'sans'}"
+  th:style="${(primaryColor != null ? '--lattice-primary: ' + primaryColor + ';' : '') + (not #strings.isEmpty(customFontFamily) ? '--font-custom: ' + customFontFamily + ';' : '')}"
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <slot name="head" />
+    <include src="style-head.html" />
+    <link rel="stylesheet" href="/css/main.css" />
+    <script type="module" src="/js/main.ts"></script>
+  </head>
+  <body
+    th:with="
+      layoutConfig=${theme.config.layout},
+      layoutModes=${ {'two-column-left', 'two-column-right', 'three-column'} },
+      siteLayout=${#lists.contains(layoutModes, layoutConfig?.siteLayout) ? layoutConfig.siteLayout : 'two-column-right'},
+      postLayout=${#lists.contains(layoutModes, layoutConfig?.postLayout) ? layoutConfig.postLayout : null},
+      layoutMode=${'{{page}}' == 'post' and postLayout != null ? postLayout : siteLayout},
+      leftWidgets=${theme.config.sidebar?.leftWidgets},
+      rightWidgets=${theme.config.sidebar?.rightWidgets},
+      hasLeft=${not #lists.isEmpty(leftWidgets)},
+      hasRight=${not #lists.isEmpty(rightWidgets)},
+      sidebarPosition=${
+        not hasLeft and not hasRight ? 'none'
+        : layoutMode == 'three-column' ? (hasLeft and hasRight ? 'both' : (hasLeft ? 'left' : 'right'))
+        : (layoutMode == 'two-column-left' ? 'left' : 'right')
+      }
+    "
+  >
+    <a class="skip-link" href="#main" th:text="#{common.skipToContent}">Skip to content</a>
+    <include src="site-header.html" />
+
+    <!--/*
+      data-sidebar：none（單欄）、left、right（二欄，左右清單合併成一個側邊欄）、both（三欄）
+      各寬度下的欄數由 src/css/layout.css 決定
+    */-->
+    <div class="site-body" th:data-sidebar="${sidebarPosition}">
+      <main id="main" class="site-main" tabindex="-1">
+        <slot />
+      </main>
+      <th:block th:if="${sidebarPosition == 'both'}">
+        <aside class="sidebar sidebar-primary">
+          <include src="sidebar-widgets.html" list="leftWidgets" />
+        </aside>
+        <aside class="sidebar sidebar-secondary">
+          <include src="sidebar-widgets.html" list="rightWidgets" />
+        </aside>
+      </th:block>
+      <aside
+        th:if="${sidebarPosition == 'left' or sidebarPosition == 'right'}"
+        class="sidebar sidebar-primary"
+      >
+        <include src="sidebar-widgets.html" list="leftWidgets" />
+        <include src="sidebar-widgets.html" list="rightWidgets" />
+      </aside>
+    </div>
+
+    <include src="site-footer.html" />
+    <halo:footer />
+  </body>
+</html>

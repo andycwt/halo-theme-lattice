@@ -8,10 +8,12 @@ html {
   line-height: var(--leading-normal);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-padding-top: var(--space-8);
+  scroll-padding-top: calc(var(--header-height-compact) + var(--space-4));
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   min-height: 100dvh;
   font-size: var(--text-base);
 }
@@ -90,7 +92,6 @@ hr {
 
   & :is(h2, h3, h4, h5, h6) {
     margin-top: 2em;
-    scroll-margin-top: var(--space-8);
   }
 
   & :is(h2, h3, h4, h5, h6) + * {

@@ -1,0 +1,16 @@
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <p>
+      &copy; <span th:text="${#temporals.format(#temporals.createNow(), 'yyyy')}">2026</span>
+      <a th:href="@{/}" th:text="${site.title}">Lattice</a>
+    </p>
+    <p class="site-footer-credit">
+      <span th:text="#{footer.poweredBy}">Powered by</span>
+      <a href="https://www.halo.run" target="_blank" rel="noopener">Halo</a>
+      <span aria-hidden="true">·</span>
+      <span th:text="#{footer.theme}">Theme</span>
+      <!--/* TODO：設定 GitHub remote 後改成連到 repo */-->
+      <span>Lattice</span>
+    </p>
+  </div>
+</footer>

@@ -1,0 +1,85 @@
+/*
+ * 主版面：主內容與側邊欄的格線。
+ * .site-body[data-sidebar] 由 layout partial 依設定與側邊欄是否有元件決定：
+ *   none  → 單欄
+ *   left  → 二欄，側邊欄在左（左右清單合併）
+ *   right → 二欄，側邊欄在右（左右清單合併）
+ *   both  → 三欄；768–1279px 縮成二欄（右側邊欄接在左側邊欄下方）
+ * < 768px 一律單欄，側邊欄移到主內容下方。
+ */
+
+.site-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "main"
+    "primary"
+    "secondary";
+  align-items: start;
+  align-content: start;
+  gap: var(--space-5) var(--space-6);
+  width: 100%;
+  max-width: var(--container-width);
+  margin-inline: auto;
+  padding: var(--space-6) var(--gutter) var(--space-8);
+
+  &[data-sidebar="none"] {
+    max-width: calc(var(--content-width) + 2 * var(--gutter));
+  }
+}
+
+.site-main {
+  grid-area: main;
+  min-width: 0;
+
+  /* 單欄時主內容與下方側邊欄拉開距離 */
+  @media (max-width: 767.98px) {
+    margin-bottom: var(--space-3);
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.sidebar {
+  min-width: 0;
+}
+
+.sidebar-primary {
+  grid-area: primary;
+}
+
+.sidebar-secondary {
+  grid-area: secondary;
+}
+
+@media (min-width: 768px) {
+  .site-body {
+    &[data-sidebar="left"],
+    &[data-sidebar="both"] {
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "primary main"
+        "secondary main";
+    }
+
+    &[data-sidebar="right"] {
+      grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+      grid-template-rows: auto 1fr;
+      grid-template-areas:
+        "main primary"
+        "main secondary";
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .site-body[data-sidebar="both"] {
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--sidebar-width);
+    grid-template-rows: auto;
+    grid-template-areas: "primary main secondary";
+  }
+}

@@ -4,5 +4,11 @@
 @import "./reset.css" layer(reset);
 @import "./tokens.css" layer(tokens);
 @import "./base.css" layer(base);
+@import "./layout.css" layer(layout);
+@import "./components/icon-button.css" layer(components);
+@import "./components/site-header.css" layer(components);
+@import "./components/lang-switch.css" layer(components);
 @import "./components/color-mode-toggle.css" layer(components);
+@import "./components/sidebar.css" layer(components);
+@import "./components/site-footer.css" layer(components);
 @import "./utilities.css" layer(utilities);

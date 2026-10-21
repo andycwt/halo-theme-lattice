@@ -3,4 +3,88 @@ kind: Setting
 metadata:
   name: theme-lattice-setting
 spec:
-  forms: []
+  forms:
+    - group: layout
+      label: 佈局
+      formSchema:
+        - $formkit: radio
+          name: siteLayout
+          label: 整站佈局
+          help: 二欄時，左右兩個側邊欄清單的元件會依序合併到同一個側邊欄。螢幕寬度不足時會自動減少欄數。
+          value: two-column-right
+          options:
+            - label: 二欄（側邊欄在左）
+              value: two-column-left
+            - label: 二欄（側邊欄在右）
+              value: two-column-right
+            - label: 三欄
+              value: three-column
+        - $formkit: radio
+          name: postLayout
+          label: 文章頁佈局
+          value: follow
+          options:
+            - label: 跟隨整站佈局
+              value: follow
+            - label: 二欄（側邊欄在左）
+              value: two-column-left
+            - label: 二欄（側邊欄在右）
+              value: two-column-right
+            - label: 三欄
+              value: three-column
+        - $formkit: radio
+          name: postListStyle
+          label: 文章列表樣式
+          help: 用於首頁、分類、標籤、作者頁。選擇卡片時，沒有封面圖的文章會以文字樣式顯示。
+          value: text
+          options:
+            - label: 純文字列表
+              value: text
+            - label: 卡片
+              value: card
+
+    - group: style
+      label: 外觀
+      formSchema:
+        - $formkit: color
+          name: primaryColor
+          label: 主色
+          help: 背景、文字、邊框與強調色都由主色推算；強調色會自動調整亮度，以維持足夠的對比。
+          format: hex
+          value: "#2f6bd8"
+        - $formkit: radio
+          name: colorMode
+          label: 預設深淺色模式
+          value: auto
+          options:
+            - label: 自動（跟隨訪客的系統設定）
+              value: auto
+            - label: 淺色
+              value: light
+            - label: 深色
+              value: dark
+        - $formkit: switch
+          name: lockColorMode
+          label: 鎖定深淺色模式
+          help: 開啟後隱藏切換按鈕，所有訪客都使用預設模式。
+          value: false
+        - $formkit: radio
+          name: bodyFont
+          label: 正文字型
+          value: sans
+          options:
+            - label: 無襯線
+              value: sans
+            - label: 襯線
+              value: serif
+        - $formkit: url
+          name: customFontUrl
+          label: 自訂字型 CSS 網址
+          help: 例如 Google Fonts 的 CSS 網址。填寫後也要填下方的 font-family。
+          validation: url
+          value: ""
+        - $formkit: text
+          name: customFontFamily
+          label: 自訂字型 font-family
+          help: 例如 "LXGW WenKai TC", serif。會優先於上方的正文字型。
+          value: ""

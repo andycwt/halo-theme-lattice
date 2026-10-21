@@ -1,0 +1,203 @@
+/*
+ * 導覽列：吸頂；捲動後（data-scrolled）縮小並加上半透明背景。
+ * < 768px 主選單收進漢堡選單（data-open 時展開）。
+ */
+
+/* 放在導覽列上方的 1px 偵測點，離開畫面即代表已捲動 */
+.site-header-sentinel {
+  position: absolute;
+  top: 0;
+  height: 1px;
+  width: 1px;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  border-bottom: 1px solid transparent;
+  background: var(--c-bg);
+  transition:
+    background-color var(--duration-normal) var(--ease),
+    border-color var(--duration-normal) var(--ease);
+
+  &[data-scrolled] {
+    background: var(--c-bg-translucent);
+    border-bottom-color: var(--c-border);
+    backdrop-filter: saturate(1.5) blur(12px);
+  }
+}
+
+.site-header-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: var(--container-width);
+  height: var(--header-height);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  transition: height var(--duration-normal) var(--ease);
+
+  [data-scrolled] & {
+    height: var(--header-height-compact);
+  }
+}
+
+.site-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  color: var(--c-text);
+  font-weight: 700;
+  font-size: var(--text-lg);
+  text-decoration: none;
+
+  &:hover {
+    color: var(--c-text);
+  }
+}
+
+.site-logo {
+  width: 2rem;
+  height: 2rem;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+}
+
+.site-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-nav {
+  margin-inline-start: auto;
+}
+
+.nav-list,
+.nav-sublist {
+  list-style: none;
+  padding: 0;
+}
+
+.nav-link {
+  display: block;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--c-text);
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    color: var(--c-accent);
+    background: var(--c-surface);
+  }
+}
+
+.site-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ---------- 桌面：水平選單，子選單滑入或聚焦時顯示 ---------- */
+@media (min-width: 768px) {
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .nav-item {
+    position: relative;
+  }
+
+  .has-children > .nav-link::after {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline-start: 0.4em;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    rotate: 45deg;
+    translate: 0 -0.2em;
+  }
+
+  .nav-sublist {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: var(--z-dropdown);
+    min-width: 10rem;
+    padding: var(--space-2);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    background: var(--c-bg);
+    box-shadow: var(--shadow-md);
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 -0.25rem;
+    transition:
+      opacity var(--duration-fast) var(--ease),
+      translate var(--duration-fast) var(--ease),
+      visibility var(--duration-fast);
+  }
+
+  .nav-item:hover > .nav-sublist,
+  .nav-item:focus-within > .nav-sublist {
+    visibility: visible;
+    opacity: 1;
+    translate: 0 0;
+  }
+
+  .nav-toggle {
+    display: none;
+  }
+}
+
+/* ---------- 手機：漢堡選單 ---------- */
+@media (max-width: 767.98px) {
+  .site-actions {
+    margin-inline-start: auto;
+  }
+
+  .site-nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: calc(100dvh - var(--header-height));
+    overflow-y: auto;
+    padding: var(--space-2) var(--gutter) var(--space-4);
+    border-bottom: 1px solid var(--c-border);
+    background: var(--c-bg);
+    box-shadow: var(--shadow-md);
+
+    &[data-open] {
+      display: block;
+    }
+  }
+
+  .nav-sublist {
+    padding-inline-start: var(--space-4);
+  }
+
+  .nav-toggle {
+    & .icon-close {
+      display: none;
+    }
+
+    &[aria-expanded="true"] {
+      & .icon-open {
+        display: none;
+      }
+
+      & .icon-close {
+        display: block;
+      }
+    }
+  }
+}

@@ -1,0 +1,89 @@
+<!--/* 導覽列：Logo、站名、主選單（最多兩層）、搜尋、語系切換、深淺色切換 */-->
+<div class="site-header-sentinel" aria-hidden="true"></div>
+<header class="site-header" data-site-header>
+  <div class="site-header-inner">
+    <a class="site-brand" th:href="@{/}">
+      <img
+        th:if="${not #strings.isEmpty(site.logo)}"
+        class="site-logo"
+        th:src="${site.logo}"
+        alt=""
+        width="32"
+        height="32"
+      />
+      <span class="site-title" th:text="${site.title}">Lattice</span>
+    </a>
+
+    <nav
+      class="site-nav"
+      id="site-nav"
+      data-site-nav
+      th:aria-label="#{nav.primary}"
+      th:with="menu=${menuFinder.getPrimary()}"
+    >
+      <ul class="nav-list" th:if="${menu != null}">
+        <li
+          th:each="item : ${menu.menuItems}"
+          class="nav-item"
+          th:classappend="${not #lists.isEmpty(item.children)} ? 'has-children'"
+        >
+          <a
+            class="nav-link"
+            th:href="@{${item.status.href}}"
+            th:target="${item.spec.target?.value}"
+            th:text="${item.status.displayName}"
+          ></a>
+          <ul class="nav-sublist" th:unless="${#lists.isEmpty(item.children)}">
+            <li th:each="child : ${item.children}">
+              <a
+                class="nav-link"
+                th:href="@{${child.status.href}}"
+                th:target="${child.spec.target?.value}"
+                th:text="${child.status.displayName}"
+              ></a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="site-actions">
+      <include src="search-button.html" />
+      <include src="lang-switch.html" />
+      <include src="color-mode-toggle.html" />
+      <button
+        type="button"
+        class="icon-button nav-toggle"
+        data-nav-toggle
+        aria-controls="site-nav"
+        aria-expanded="false"
+        th:aria-label="#{nav.openMenu}"
+        th:data-label-open="#{nav.openMenu}"
+        th:data-label-close="#{nav.closeMenu}"
+      >
+        <svg
+          class="icon-open"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg
+          class="icon-close"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>

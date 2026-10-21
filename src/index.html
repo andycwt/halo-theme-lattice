@@ -1,43 +1,11 @@
-<!doctype html>
-<html
-  xmlns:th="https://www.thymeleaf.org"
-  th:with="
-    style=${theme.config.style},
-    colorMode=${#lists.contains({'light', 'dark'}, style?.colorMode) ? style.colorMode : 'auto'},
-    colorModeLocked=${style?.lockColorMode == true},
-    primaryColor=${style?.primaryColor != null and style.primaryColor matches '^#[0-9a-fA-F]{3,8}$' ? style.primaryColor : null},
-    customFontFamily=${#strings.trim(style?.customFontFamily)}
-  "
-  th:lang="${#locale.toLanguageTag()}"
-  th:data-color-mode="${colorMode}"
-  th:data-color-mode-locked="${colorModeLocked ? 'true' : null}"
-  th:data-font="${style?.bodyFont == 'serif' ? 'serif' : 'sans'}"
-  th:style="${(primaryColor != null ? '--lattice-primary: ' + primaryColor + ';' : '') + (not #strings.isEmpty(customFontFamily) ? '--font-custom: ' + customFontFamily + ';' : '')}"
->
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<include src="layout.html" page="index">
+  <template name="head">
     <title th:text="${site.title}">Lattice</title>
-    <include src="style-head.html" />
-    <link rel="stylesheet" href="./css/main.css" />
-    <script type="module" src="./js/main.ts"></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main" th:text="#{common.skipToContent}">Skip to content</a>
-    <header>
-      <include src="color-mode-toggle.html" />
-    </header>
-    <main id="main">
-      <h1 th:text="${site.title}">Lattice</h1>
-      <ul>
-        <li th:each="post : ${posts.items}">
-          <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}">Post title</a>
-        </li>
-      </ul>
-    </main>
-    <footer>
-      <span th:text="#{footer.poweredBy}">Powered by</span>
-      <a href="https://www.halo.run" target="_blank" rel="noopener">Halo</a>
-    </footer>
-  </body>
-</html>
+  </template>
+  <h1 th:text="${site.title}">Lattice</h1>
+  <ul>
+    <li th:each="post : ${posts.items}">
+      <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}">Post title</a>
+    </li>
+  </ul>
+</include>
