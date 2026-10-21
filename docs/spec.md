@@ -7,7 +7,7 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 1（專案骨架）已完成，等待使用者驗收。
+- **目前狀態**：階段 2（本機開發環境）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
 - **下一步**：從「第 9 節 實作階段與進度」的第一個未完成階段開始。
 - 專案資料夾已改名為 `halo-theme-lattice`（#17）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。
@@ -255,7 +255,12 @@ halo-theme-lattice/
   - 已在拋棄式 Halo 2.26.0 容器中驗證：zip 可安裝、可啟用、首頁正常渲染、`/themes/theme-lattice/assets/*` 可載入、`zh-TW` 語系字串正確
   - 查證事實：Halo 2.26.0 映像檔預裝 `plugin-comment-widget`、`plugin-search-widget`、`plugin-shiki`（程式碼高亮）
   - 打包修正（使用者同意，2026-10-21）：`theme-package` 預設只打包 `templates/`、`i18n/`、`LICENSE`、`README.md`、`*.yaml` 等，不含 `NOTICE`，且會把 `pnpm-lock.yaml`、`pnpm-workspace.yaml` 一起打包。`pnpm package` 在打包後執行 `src/scripts/normalize-package.mjs`（使用 `adm-zip`），補上 `NOTICE` 並移除這兩個 pnpm 檔案
-- [ ] **階段 2：本機開發環境**：`dev/docker-compose.yaml`，確認在 Halo 2.26.0 上可以即時預覽
+- [x] **階段 2：本機開發環境**：`dev/docker-compose.yaml`，確認在 Halo 2.26.0 上可以即時預覽（2026-10-21）
+  - 指令：`pnpm halo:up`、`pnpm halo:down`、`pnpm halo:logs`；操作說明在 `docs/development.md`
+  - 關閉模板快取用環境變數 `SPRING_THYMELEAF_CACHE=false`（Halo 官方主題開發文件的作法）
+  - 用環境變數 `HALO_VERSION` 切換 Halo 版本，每個版本使用獨立的資料 volume（`lattice-dev-halo-<版本>`），避免降版造成資料庫不相容
+  - 已驗證：Halo 從掛載的目錄辨識出主題，安裝並啟用後，在 `pnpm dev` 執行中修改模板、CSS、語系檔，重新整理就會生效，不需要重啟
+  - 第 8.1 節的測試資料尚未準備，留到需要時（階段 6 內容頁面前）再做
 - [ ] **階段 3：設計系統**：CSS 變數與 tokens、主色推算、深淺色模式（含防閃爍腳本與切換按鈕）、字型堆疊、基礎排版
 - [ ] **階段 4：版面骨架**：`layout` partial、導覽列（含語系切換、搜尋入口）、頁尾、二欄或三欄佈局與響應式、`settings.yaml` 的 `layout` 和 `style` group
 - [ ] **階段 5：側邊欄**：8 個元件、左右側邊欄的 array 設定、吸頂、手機版目錄浮動按鈕

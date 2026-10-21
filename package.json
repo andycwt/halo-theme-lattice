@@ -7,6 +7,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
+    "halo:up": "docker compose -f dev/docker-compose.yaml up -d --wait",
+    "halo:down": "docker compose -f dev/docker-compose.yaml down",
+    "halo:logs": "docker compose -f dev/docker-compose.yaml logs -f halo",
     "build": "pnpm typecheck && vite build",
     "package": "pnpm build && theme-package && node src/scripts/normalize-package.mjs",
     "typecheck": "tsc --noEmit",

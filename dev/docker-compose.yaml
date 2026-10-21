@@ -1,0 +1,30 @@
+# Lattice 本機開發環境：Halo（內建 H2 資料庫）+ 掛載本專案為主題目錄
+# 用法見 docs/development.md
+name: lattice-dev
+
+services:
+  halo:
+    image: halohub/halo:${HALO_VERSION:-2.26.0}
+    restart: unless-stopped
+    ports:
+      - "${HALO_PORT:-8090}:8090"
+    environment:
+      # 關閉模板快取，存檔重建後重新整理即可看到變更
+      - SPRING_THYMELEAF_CACHE=false
+    command:
+      - --halo.external-url=http://localhost:${HALO_PORT:-8090}/
+    volumes:
+      # 不同 Halo 版本使用各自的資料，避免降版時資料庫不相容
+      - halo-data:/root/.halo2
+      # 資料夾名稱必須和 theme.yaml 的 metadata.name 一致
+      - ..:/root/.halo2/themes/theme-lattice
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/actuator/health/readiness"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  halo-data:
+    name: lattice-dev-halo-${HALO_VERSION:-2.26.0}
