@@ -7,8 +7,8 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 0–7 已完成並經使用者驗收（2026-10-21）；階段 8 已完成，等待使用者驗收。開發流程見 `docs/development.md`。
-- **下一步**：階段 9（i18n 補齊與驗證）：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本。
+- **目前狀態**：階段 0–8 與追加的 #29 已完成並經使用者驗收；階段 9 已完成，等待使用者驗收（2026-10-22）。開發流程見 `docs/development.md`。
+- **下一步**：階段 10（CI 與發布）：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查。公開 repo 前要先移除第 1 節的測試帳號密碼，並把頁尾的主題名稱連到 repo。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。使用者確認後才 commit。
 - **本機開發環境的狀態**（只存在本機 Docker volume，不在版控中）：
   - Halo 2.26.0 在 http://localhost:8090 ，測試帳號 `admin` / `Admin12345`，介面語言繁中；Lattice 已安裝並啟用
@@ -342,7 +342,12 @@ halo-theme-lattice/
   - `style` group 新增 `allowVisitorColor`（預設開啟）；開啟時 `<html>` 輸出 `data-primary-customizable`，防閃爍腳本只在有這個屬性時套用訪客的主色
   - 語系切換與主色面板的開關行為抽成 `src/js/disclosure.ts` 共用
   - 已在 Halo 2.26.0 驗證：選色票、自由選色、恢復站點預設、重新載入後保留且在 `<body>` 出現前就已套用、關閉設定時隱藏按鈕並忽略訪客的選擇、390px 下面板不超出畫面
-- [ ] **階段 9：i18n 補齊與驗證**：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本
+- [x] **階段 9：i18n 補齊與驗證**：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本（2026-10-22）
+  - 指令：`pnpm check`（格式、型別、建置、驗證、預算）、`pnpm validate`、`pnpm budget`；`pnpm package` 也會先跑驗證與預算
+  - `src/scripts/validate-theme.mjs`：檢查建置後的 `templates/`（片段已展開，key 才是完整的）。`#messages.msg('prefix.' + 變數)` 這類動態 key 以前綴視為已使用；定義了但沒用到的 key 只列為警告。已用故意寫錯的語系檔與模板確認會報錯
+  - `src/scripts/check-budget.mjs`：以模板中 `<script src>`、`<link>` 實際引用的檔案判斷「主要 JS」，按需載入的 chunk 不計入。目前 CSS 6.4KB、主要 JS 3.8KB（highlight.js chunk 40.6KB 不計入）
+  - 翻譯：66 個 key × 3 個語系全部到位；以英文渲染全站檢查，主題介面文字沒有殘留中文（出現的中文都是選單、分類等站點資料，或刻意以原文顯示的語言名稱）
+  - 英文單複數：`archives.count` 改用 Java MessageFormat 的 `choice`（`1 post`／`12 posts`）；驗證腳本只比對各語系用到的參數索引，允許格式不同
 - [ ] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查
 
 ---

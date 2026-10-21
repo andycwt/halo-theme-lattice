@@ -11,7 +11,10 @@
     "halo:down": "docker compose -f dev/docker-compose.yaml down",
     "halo:logs": "docker compose -f dev/docker-compose.yaml logs -f halo",
     "build": "pnpm typecheck && vite build",
-    "package": "pnpm build && theme-package && node src/scripts/normalize-package.mjs",
+    "check": "pnpm format:check && pnpm build && pnpm validate && pnpm budget",
+    "validate": "node src/scripts/validate-theme.mjs",
+    "budget": "node src/scripts/check-budget.mjs",
+    "package": "pnpm build && pnpm validate && pnpm budget && theme-package && node src/scripts/normalize-package.mjs",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check ."

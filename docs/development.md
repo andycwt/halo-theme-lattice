@@ -50,8 +50,19 @@ HALO_VERSION=2.25.0 pnpm halo:up
 
 連接埠被占用時，可以用 `HALO_PORT=8091` 改用其他連接埠。
 
+## 品質檢查
+
+```sh
+pnpm check          # 格式、型別、建置、主題結構驗證、效能預算，一次跑完
+pnpm validate       # 只跑主題結構驗證（需先 pnpm build）
+pnpm budget         # 只跑效能預算（需先 pnpm build）
+```
+
+- `pnpm validate`（`src/scripts/validate-theme.mjs`）：`theme.yaml` 必要欄位與版本一致性、`settings.yaml` 名稱不重複、三個語系檔的 key 與參數一致、建置後模板用到的語系 key 都有定義。新增介面文字時，三個語系檔都要加上同一個 key。
+- `pnpm budget`（`src/scripts/check-budget.mjs`）：CSS ≤ 30KB gzip、模板直接載入的 JS ≤ 15KB gzip；按需載入的 chunk（highlight.js）只列出、不計入。
+
 ## 打包
 
 ```sh
-pnpm package        # 輸出 dist/theme-lattice-<版本>.zip
+pnpm package        # 建置、驗證、效能預算通過後，輸出 dist/theme-lattice-<版本>.zip
 ```
