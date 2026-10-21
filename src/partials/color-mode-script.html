@@ -1,17 +1,23 @@
 <!--/*
-  防閃爍：在 CSS 套用前，依訪客儲存的選擇設定 data-color-mode。
+  防閃爍：在 CSS 套用前，依訪客儲存的選擇設定 data-color-mode 與主色（--lattice-primary）。
   data-color-scheme 是 Halo 官方搜尋、評論組件讀取的深淺色標記，需與 data-color-mode 同步。
-  必須是 <head> 中的同步 inline script；站長鎖定模式時不讀取訪客選擇。
-  儲存鍵名需與 src/js/color-mode.ts 一致。 */-->
+  必須是 <head> 中的同步 inline script；站長鎖定模式或關閉訪客自訂主色時，不讀取對應的訪客選擇。
+  儲存鍵名需與 src/js/color-mode.ts、src/js/color-picker.ts 一致。 */-->
 <script>
   (() => {
     const root = document.documentElement;
-    if (root.hasAttribute("data-color-mode-locked")) return;
     try {
-      const mode = localStorage.getItem("lattice-color-mode");
-      if (mode === "auto" || mode === "light" || mode === "dark") {
-        root.dataset.colorMode = mode;
-        root.dataset.colorScheme = mode;
+      if (!root.hasAttribute("data-color-mode-locked")) {
+        const mode = localStorage.getItem("lattice-color-mode");
+        if (mode === "auto" || mode === "light" || mode === "dark") {
+          root.dataset.colorMode = mode;
+          root.dataset.colorScheme = mode;
+        }
+      }
+      if (root.hasAttribute("data-primary-customizable")) {
+        const primary = localStorage.getItem("lattice-primary");
+        if (primary && /^#[0-9a-f]{6}$/i.test(primary))
+          root.style.setProperty("--lattice-primary", primary);
       }
     } catch {}
   })();

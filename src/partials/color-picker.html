@@ -1,0 +1,71 @@
+<!--/*
+  訪客自訂主色（docs/spec.md #29）：調色盤按鈕開啟面板，含 8 個預設色票、自由選色與恢復站點預設。
+  站長關閉「允許訪客自訂主色」時不輸出。行為見 src/js/color-picker.ts
+*/-->
+<div
+  th:if="${primaryCustomizable}"
+  class="color-picker"
+  data-color-picker
+  th:data-site-color="${primaryColor ?: '#2f6bd8'}"
+>
+  <button
+    type="button"
+    class="icon-button"
+    data-color-picker-toggle
+    aria-expanded="false"
+    aria-controls="color-picker-panel"
+    th:aria-label="#{colorPicker.label}"
+    th:title="#{colorPicker.label}"
+  >
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8z"
+      />
+      <circle cx="7.5" cy="11" r="1" fill="currentColor" />
+      <circle cx="10.5" cy="7" r="1" fill="currentColor" />
+      <circle cx="15" cy="7.5" r="1" fill="currentColor" />
+    </svg>
+  </button>
+  <div
+    class="color-picker-panel"
+    id="color-picker-panel"
+    role="group"
+    th:aria-label="#{colorPicker.label}"
+    hidden
+  >
+    <p class="color-picker-title" th:text="#{colorPicker.label}">Theme color</p>
+    <div class="color-swatches">
+      <button
+        th:each="swatch : ${ { {'#2f6bd8', 'blue'}, {'#4f46e5', 'indigo'}, {'#7c3aed', 'violet'}, {'#db2777', 'pink'}, {'#dc2626', 'red'}, {'#ea580c', 'orange'}, {'#16a34a', 'green'}, {'#0d9488', 'teal'} } }"
+        type="button"
+        class="color-swatch"
+        th:data-color="${swatch[0]}"
+        th:style="|--swatch: ${swatch[0]}|"
+        th:aria-label="${#messages.msg('colorPicker.' + swatch[1])}"
+        th:title="${#messages.msg('colorPicker.' + swatch[1])}"
+        aria-pressed="false"
+      ></button>
+    </div>
+    <label class="color-picker-custom">
+      <span th:text="#{colorPicker.custom}">Custom</span>
+      <input type="color" data-color-input th:value="${primaryColor ?: '#2f6bd8'}" />
+    </label>
+    <button
+      type="button"
+      class="color-picker-reset"
+      data-color-reset
+      disabled
+      th:text="#{colorPicker.reset}"
+    >
+      Reset to site default
+    </button>
+  </div>
+</div>

@@ -16,12 +16,14 @@
     colorMode=${#lists.contains({'light', 'dark'}, style?.colorMode) ? style.colorMode : 'auto'},
     colorModeLocked=${style?.lockColorMode == true},
     primaryColor=${style?.primaryColor != null and style.primaryColor matches '^#[0-9a-fA-F]{3,8}$' ? style.primaryColor : null},
+    primaryCustomizable=${style?.allowVisitorColor != false},
     customFontFamily=${#strings.trim(style?.customFontFamily)}
   "
   th:lang="${#locale.toLanguageTag()}"
   th:data-color-mode="${colorMode}"
   th:data-color-scheme="${colorMode}"
   th:data-color-mode-locked="${colorModeLocked ? 'true' : null}"
+  th:data-primary-customizable="${primaryCustomizable ? 'true' : null}"
   th:data-font="${style?.bodyFont == 'serif' ? 'serif' : 'sans'}"
   th:style="${(primaryColor != null ? '--lattice-primary: ' + primaryColor + ';' : '') + (not #strings.isEmpty(customFontFamily) ? '--font-custom: ' + customFontFamily + ';' : '')}"
 >

@@ -183,6 +183,11 @@ halo-theme-lattice/
 - 後台用**色票選擇器**選一個主色
 - 用 `oklch()` 和 `color-mix()` 從主色推算深淺兩種模式的背景、文字、邊框、強調色
 - 主色對比不足時，自動調整前景文字色，以符合 AA 標準
+- **訪客自訂主色**（#29，使用者於 2026-10-21 新增）：
+  - 導覽列提供調色盤按鈕，面板內有 8 個預設色票、自由選色器與「恢復站點預設」
+  - 訪客的選擇存在 `localStorage`，並由 `<head>` 的防閃爍腳本在渲染前套用
+  - 後台「外觀」提供「允許訪客自訂主色」開關，預設開啟；關閉時隱藏按鈕並忽略訪客先前的選擇
+  - 任何顏色都經過同一套推算，對比維持 AA
 - 深淺色模式：
   - 站長設定預設模式：自動（跟隨系統）、淺色、深色
   - 訪客可以用導覽列的按鈕切換，選擇存在 `localStorage`
@@ -220,7 +225,7 @@ halo-theme-lattice/
 | `layout` 佈局 | 整站佈局模式；文章頁佈局覆寫；文章列表樣式（文字或卡片） |
 | `sidebar` 側邊欄 | 左側邊欄元件清單（array：元件類型、是否吸頂、自訂 HTML 內容）；右側邊欄元件清單（同上）；公告內容；最新文章數量 |
 | `profile` 個人資料 | 頭像、暱稱、簡介、社群連結（array） |
-| `style` 外觀 | 主色（color picker）；預設深淺色模式；鎖定模式開關；正文字型（無襯線或襯線）；自訂字型 CSS 網址與 `font-family` |
+| `style` 外觀 | 主色（color picker）；允許訪客自訂主色開關；預設深淺色模式；鎖定模式開關；正文字型（無襯線或襯線）；自訂字型 CSS 網址與 `font-family` |
 | `home` 首頁 | 簡介區塊開關、大標題、副標題、背景圖 |
 | `post` 文章 | 程式碼高亮開關；關於頁和友鏈頁是否顯示留言 |
 | `advanced` 進階 | View Transitions 開關；輸出頁面元資料開關；輸出結構化資料開關；預設分享圖 |
@@ -331,6 +336,12 @@ halo-theme-lattice/
   - JSON-LD 以 SpEL 建立 map，再用 Thymeleaf JavaScript 內嵌序列化，確保是合法 JSON；`.?[value != null]` 去掉沒有值的欄位。首頁 `WebSite`、文章 `BlogPosting`（含作者、發布與修改時間、標籤為 keywords）、首頁與錯誤頁以外的頁面 `BreadcrumbList`（文章的麵包屑經過第一個分類）
   - 轉場：`<head>` 內 `@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto } }`；導覽列設定 `view-transition-name: site-header`，換頁時不跟內容一起淡入淡出
   - 已在 Halo 2.26.0 驗證：15 種頁面各只有一個 `<title>` 與最多一個（Halo 注入的）description，JSON-LD 全部能解析；三個開關分別生效；沒有封面的文章使用預設分享圖；Chrome 中真實點擊站內連結會觸發跨頁轉場，減少動態效果或關閉設定時不觸發
+- [x] **追加：訪客自訂主色（#29）**（2026-10-21）
+  - `partials/color-picker.html` 放在導覽列語系切換與深淺色切換之間；`src/js/color-picker.ts` 處理選擇、即時預覽（拖曳自由選色器時）、儲存（`localStorage` 的 `lattice-primary`）與跨分頁同步
+  - 8 個預設色票：藍 `#2f6bd8`、靛 `#4f46e5`、紫 `#7c3aed`、粉紅 `#db2777`、紅 `#dc2626`、橘 `#ea580c`、綠 `#16a34a`、青綠 `#0d9488`
+  - `style` group 新增 `allowVisitorColor`（預設開啟）；開啟時 `<html>` 輸出 `data-primary-customizable`，防閃爍腳本只在有這個屬性時套用訪客的主色
+  - 語系切換與主色面板的開關行為抽成 `src/js/disclosure.ts` 共用
+  - 已在 Halo 2.26.0 驗證：選色票、自由選色、恢復站點預設、重新載入後保留且在 `<body>` 出現前就已套用、關閉設定時隱藏按鈕並忽略訪客的選擇、390px 下面板不超出畫面
 - [ ] **階段 9：i18n 補齊與驗證**：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本
 - [ ] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查
 
@@ -340,7 +351,7 @@ halo-theme-lattice/
 
 - 瞬間（moments）、相簿（photos）、作品集、時間軸等特色頁面
 - 一言、音樂播放器、天氣、日程等側邊欄元件；熱門文章（依賴瀏覽數）
-- 預設配色組合
+- 站長端的預設配色組合（訪客端的 8 個預設色票已在 #29 納入第一版）
 - Hero 輪播、打字機效果等首頁特效
 - 後台文字欄位的多語系、文章內容的多語系
 - 友鏈頁的隨機訪問、複製本站資訊

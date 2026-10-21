@@ -52,6 +52,11 @@ spec:
           help: 背景、文字、邊框與強調色都由主色推算；強調色會自動調整亮度，以維持足夠的對比。
           format: hex
           value: "#2f6bd8"
+        - $formkit: switch
+          name: allowVisitorColor
+          label: 允許訪客自訂主色
+          help: 導覽列顯示調色盤按鈕，訪客可以選擇預設色票或自訂顏色，選擇只存在訪客自己的瀏覽器。關閉時隱藏按鈕，所有訪客都使用上方的主色。
+          value: true
         - $formkit: radio
           name: colorMode
           label: 預設深淺色模式
