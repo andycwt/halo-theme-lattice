@@ -1,0 +1,6 @@
+<section
+  th:if="${not #strings.isEmpty(#strings.trim(widget.html))}"
+  class="widget widget-custom-html"
+>
+  <div class="widget-body" th:utext="${widget.html}"></div>
+</section>

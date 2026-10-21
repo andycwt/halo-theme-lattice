@@ -1,0 +1,15 @@
+<th:block th:with="tags=${tagFinder.listAll()}">
+  <section th:if="${not #lists.isEmpty(tags)}" class="widget widget-tags">
+    <h2 class="widget-title">
+      <a th:href="@{/tags}" th:text="#{widget.tags}">Tags</a>
+    </h2>
+    <ul class="tag-cloud">
+      <li th:each="tag : ${tags}">
+        <a class="tag-pill" th:href="@{${tag.status.permalink}}">
+          <span th:text="${tag.spec.displayName}">Tag</span>
+          <span class="term-count" th:text="${tag.postCount}">0</span>
+        </a>
+      </li>
+    </ul>
+  </section>
+</th:block>

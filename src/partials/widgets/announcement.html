@@ -1,0 +1,9 @@
+<th:block th:with="announcement=${theme.config.sidebar?.announcement}">
+  <section
+    th:if="${not #strings.isEmpty(#strings.trim(announcement))}"
+    class="widget widget-announcement"
+  >
+    <h2 class="widget-title" th:text="#{widget.announcement}">Announcement</h2>
+    <div class="widget-body prose" th:utext="${announcement}"></div>
+  </section>
+</th:block>

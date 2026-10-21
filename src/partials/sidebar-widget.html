@@ -1,0 +1,12 @@
+<!--/* 注意：<include> 會被整個替換成片段內容，所以 th:case 要放在外層的 th:block。
+  依 widget.type 輸出對應的側邊欄元件；呼叫端需提供變數 widget 與 pageType */-->
+<th:block th:switch="${widget.type}">
+  <th:block th:case="'profile'"><include src="widgets/profile.html" /></th:block>
+  <th:block th:case="'announcement'"><include src="widgets/announcement.html" /></th:block>
+  <th:block th:case="'categories'"><include src="widgets/categories.html" /></th:block>
+  <th:block th:case="'tags'"><include src="widgets/tags.html" /></th:block>
+  <th:block th:case="'recentPosts'"><include src="widgets/recent-posts.html" /></th:block>
+  <th:block th:case="'siteStats'"><include src="widgets/site-stats.html" /></th:block>
+  <th:block th:case="'toc'"><include src="widgets/toc.html" /></th:block>
+  <th:block th:case="'customHtml'"><include src="widgets/custom-html.html" /></th:block>
+</th:block>

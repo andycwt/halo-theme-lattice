@@ -1,0 +1,38 @@
+<!--/* 手機版目錄：右下角浮動按鈕開啟對話框；只有 < 768px 且頁面上有目錄元件與標題時才顯示 */-->
+<button
+  type="button"
+  class="toc-fab"
+  data-toc-fab
+  hidden
+  th:aria-label="#{widget.toc}"
+  th:title="#{widget.toc}"
+>
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01" />
+  </svg>
+</button>
+<dialog class="toc-dialog" data-toc-dialog th:aria-label="#{widget.toc}">
+  <div class="toc-dialog-header">
+    <h2 class="widget-title" th:text="#{widget.toc}">Contents</h2>
+    <button type="button" class="icon-button" data-toc-dialog-close th:aria-label="#{toc.close}">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </div>
+  <nav class="toc" data-toc-mobile th:aria-label="#{widget.toc}"></nav>
+</dialog>

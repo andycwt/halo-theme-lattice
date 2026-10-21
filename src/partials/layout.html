@@ -36,7 +36,8 @@
       layoutModes=${ {'two-column-left', 'two-column-right', 'three-column'} },
       siteLayout=${#lists.contains(layoutModes, layoutConfig?.siteLayout) ? layoutConfig.siteLayout : 'two-column-right'},
       postLayout=${#lists.contains(layoutModes, layoutConfig?.postLayout) ? layoutConfig.postLayout : null},
-      layoutMode=${'{{page}}' == 'post' and postLayout != null ? postLayout : siteLayout},
+      pageType='{{page}}',
+      layoutMode=${pageType == 'post' and postLayout != null ? postLayout : siteLayout},
       leftWidgets=${theme.config.sidebar?.leftWidgets},
       rightWidgets=${theme.config.sidebar?.rightWidgets},
       hasLeft=${not #lists.isEmpty(leftWidgets)},
@@ -59,24 +60,35 @@
       <main id="main" class="site-main" tabindex="-1">
         <slot />
       </main>
-      <th:block th:if="${sidebarPosition == 'both'}">
-        <aside class="sidebar sidebar-primary">
-          <include src="sidebar-widgets.html" list="leftWidgets" />
-        </aside>
-        <aside class="sidebar sidebar-secondary">
-          <include src="sidebar-widgets.html" list="rightWidgets" />
-        </aside>
-      </th:block>
+      <!--/*
+        每個側邊欄依序處理一組或多組元件清單：先輸出不吸頂的元件，再把吸頂的元件集中到 .sidebar-sticky。
+        三欄時左右清單各一個側邊欄；二欄時兩個清單合併到同一個側邊欄。
+      */-->
       <aside
-        th:if="${sidebarPosition == 'left' or sidebarPosition == 'right'}"
-        class="sidebar sidebar-primary"
+        th:each="aside : ${sidebarPosition == 'both'
+          ? { {'primary', {leftWidgets}}, {'secondary', {rightWidgets}} }
+          : { {'primary', {leftWidgets, rightWidgets}} }}"
+        th:unless="${sidebarPosition == 'none'}"
+        th:class="|sidebar sidebar-${aside[0]}|"
       >
-        <include src="sidebar-widgets.html" list="leftWidgets" />
-        <include src="sidebar-widgets.html" list="rightWidgets" />
+        <div
+          th:each="stickyGroup : ${ {false, true} }"
+          th:class="${stickyGroup} ? 'sidebar-sticky' : 'sidebar-static'"
+        >
+          <th:block th:each="widgets : ${aside[1]}">
+            <th:block
+              th:each="widget : ${widgets}"
+              th:if="${(widget.sticky == true) == stickyGroup}"
+            >
+              <include src="sidebar-widget.html" />
+            </th:block>
+          </th:block>
+        </div>
       </aside>
     </div>
 
     <include src="site-footer.html" />
+    <th:block th:if="${pageType == 'post'}"><include src="toc-fab.html" /></th:block>
     <halo:footer />
   </body>
 </html>

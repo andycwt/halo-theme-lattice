@@ -88,3 +88,149 @@ spec:
           label: 自訂字型 font-family
           help: 例如 "LXGW WenKai TC", serif。會優先於上方的正文字型。
           value: ""
+
+    - group: sidebar
+      label: 側邊欄
+      formSchema:
+        - $formkit: array
+          name: leftWidgets
+          label: 左側邊欄元件
+          help: 依序顯示。二欄佈局時，左右兩個清單會依序合併到同一個側邊欄。
+          value:
+            - type: profile
+              sticky: false
+            - type: toc
+              sticky: true
+          itemLabels:
+            - type: text
+              label: $value.type
+          children:
+            - $formkit: select
+              name: type
+              label: 元件
+              value: profile
+              options:
+                - label: 個人資料
+                  value: profile
+                - label: 公告
+                  value: announcement
+                - label: 分類
+                  value: categories
+                - label: 標籤
+                  value: tags
+                - label: 最新文章
+                  value: recentPosts
+                - label: 站點統計
+                  value: siteStats
+                - label: 文章目錄（只在文章頁顯示）
+                  value: toc
+                - label: 自訂 HTML
+                  value: customHtml
+            - $formkit: switch
+              name: sticky
+              label: 吸頂
+              help: 吸頂的元件會集中在側邊欄最下方，捲動時一起停靠在導覽列下方。單欄（手機）時不吸頂。
+              value: false
+            - $formkit: textarea
+              if: "$value.type === 'customHtml'"
+              name: html
+              label: HTML 內容
+              value: ""
+        - $formkit: array
+          name: rightWidgets
+          label: 右側邊欄元件
+          help: 三欄佈局時顯示在右側；二欄佈局時接在左側邊欄清單之後。
+          value:
+            - type: recentPosts
+              sticky: false
+            - type: categories
+              sticky: false
+            - type: tags
+              sticky: false
+          itemLabels:
+            - type: text
+              label: $value.type
+          children:
+            - $formkit: select
+              name: type
+              label: 元件
+              value: profile
+              options:
+                - label: 個人資料
+                  value: profile
+                - label: 公告
+                  value: announcement
+                - label: 分類
+                  value: categories
+                - label: 標籤
+                  value: tags
+                - label: 最新文章
+                  value: recentPosts
+                - label: 站點統計
+                  value: siteStats
+                - label: 文章目錄（只在文章頁顯示）
+                  value: toc
+                - label: 自訂 HTML
+                  value: customHtml
+            - $formkit: switch
+              name: sticky
+              label: 吸頂
+              help: 吸頂的元件會集中在側邊欄最下方，捲動時一起停靠在導覽列下方。單欄（手機）時不吸頂。
+              value: false
+            - $formkit: textarea
+              if: "$value.type === 'customHtml'"
+              name: html
+              label: HTML 內容
+              value: ""
+        - $formkit: textarea
+          name: announcement
+          label: 公告內容
+          help: 可使用 HTML。留空時不顯示公告元件。
+          value: ""
+        - $formkit: number
+          name: recentPostsCount
+          label: 最新文章數量
+          value: 5
+          min: 1
+          max: 20
+          validation: required|between:1,20
+
+    - group: profile
+      label: 個人資料
+      formSchema:
+        - $formkit: attachment
+          name: avatar
+          label: 頭像
+          help: 留空時使用系統設定的 Logo。
+          accepts:
+            - "image/*"
+          value: ""
+        - $formkit: text
+          name: nickname
+          label: 暱稱
+          help: 留空時使用站點標題。
+          value: ""
+        - $formkit: textarea
+          name: bio
+          label: 簡介
+          help: 留空時使用站點副標題。
+          value: ""
+        - $formkit: array
+          name: socials
+          label: 社群連結
+          value: []
+          itemLabels:
+            - type: text
+              label: $value.name
+          children:
+            - $formkit: text
+              name: name
+              label: 名稱
+              value: ""
+              validation: required
+            - $formkit: url
+              name: url
+              label: 網址
+              help: "也可以填 mailto: 開頭的電子郵件連結。"
+              value: ""
+              validation: required

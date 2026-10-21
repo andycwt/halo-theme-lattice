@@ -4,7 +4,7 @@
  *   none  → 單欄
  *   left  → 二欄，側邊欄在左（左右清單合併）
  *   right → 二欄，側邊欄在右（左右清單合併）
- *   both  → 三欄；768–1279px 縮成二欄（右側邊欄接在左側邊欄下方）
+ *   both  → 三欄；768–1279px 縮成二欄（右側邊欄接在左側邊欄下方，吸頂元件集中到最下方）
  * < 768px 一律單欄，側邊欄移到主內容下方。
  */
 
@@ -57,21 +57,23 @@
 
 @media (min-width: 768px) {
   .site-body {
-    &[data-sidebar="left"],
+    &[data-sidebar="left"] {
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+      grid-template-areas: "primary main";
+    }
+
+    &[data-sidebar="right"] {
+      grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+      grid-template-areas: "main primary";
+    }
+
+    /* 三欄縮成二欄：右側邊欄接在左側邊欄下方，撐滿剩餘高度（吸頂元件由 sidebar.ts 集中到這裡） */
     &[data-sidebar="both"] {
       grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
       grid-template-rows: auto 1fr;
       grid-template-areas:
         "primary main"
         "secondary main";
-    }
-
-    &[data-sidebar="right"] {
-      grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
-      grid-template-rows: auto 1fr;
-      grid-template-areas:
-        "main primary"
-        "main secondary";
     }
   }
 }

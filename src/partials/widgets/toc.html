@@ -1,0 +1,5 @@
+<!--/* 文章目錄：只在文章頁輸出；內容由 src/js/toc.ts 依正文標題產生，沒有標題時維持隱藏 */-->
+<section th:if="${pageType == 'post'}" class="widget widget-toc" data-toc-widget hidden>
+  <h2 class="widget-title" th:text="#{widget.toc}">Contents</h2>
+  <nav class="toc" data-toc th:aria-label="#{widget.toc}"></nav>
+</section>

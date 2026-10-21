@@ -1,0 +1,21 @@
+<section th:with="stats=${siteStatsFinder.getStats()}" class="widget widget-site-stats">
+  <h2 class="widget-title" th:text="#{widget.siteStats}">Site stats</h2>
+  <dl class="stats-grid">
+    <div>
+      <dt th:text="#{stats.posts}">Posts</dt>
+      <dd th:text="${stats.post}">0</dd>
+    </div>
+    <div>
+      <dt th:text="#{stats.categories}">Categories</dt>
+      <dd th:text="${stats.category}">0</dd>
+    </div>
+    <div>
+      <dt th:text="#{stats.comments}">Comments</dt>
+      <dd th:text="${stats.comment}">0</dd>
+    </div>
+    <div>
+      <dt th:text="#{stats.visits}">Visits</dt>
+      <dd th:text="${stats.visit}">0</dd>
+    </div>
+  </dl>
+</section>

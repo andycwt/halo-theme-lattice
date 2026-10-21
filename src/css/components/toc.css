@@ -1,0 +1,94 @@
+/* 文章目錄：側邊欄元件與手機版浮動按鈕、對話框共用 .toc 樣式 */
+.toc {
+  & ol {
+    padding: 0;
+    list-style: none;
+  }
+
+  & ol ol {
+    padding-inline-start: var(--space-3);
+  }
+
+  & a {
+    display: block;
+    padding: var(--space-1) var(--space-2);
+    border-inline-start: 2px solid transparent;
+    color: var(--c-text-muted);
+    text-decoration: none;
+    line-height: 1.5;
+
+    &:hover {
+      color: var(--c-text);
+    }
+
+    &[aria-current="location"] {
+      border-inline-start-color: var(--c-accent);
+      color: var(--c-accent);
+      font-weight: 500;
+    }
+  }
+}
+
+/* 手機單欄時，側邊欄中的目錄元件由浮動按鈕取代 */
+@media (max-width: 767.98px) {
+  .widget-toc {
+    display: none;
+  }
+}
+
+.toc-fab {
+  position: fixed;
+  right: var(--space-4);
+  bottom: calc(var(--space-4) + env(safe-area-inset-bottom));
+  z-index: var(--z-header);
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+  box-shadow: var(--shadow-md);
+
+  & svg {
+    width: 1.375rem;
+    height: 1.375rem;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+}
+
+.toc-dialog {
+  width: min(24rem, calc(100vw - var(--space-4) * 2));
+  max-height: min(70dvh, 36rem);
+  margin: auto var(--space-4) calc(var(--space-4) * 2 + 3rem) auto;
+  padding: var(--space-4);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-bg);
+  color: var(--c-text);
+  box-shadow: var(--shadow-md);
+  font-size: var(--text-sm);
+
+  &::backdrop {
+    background: light-dark(oklch(0 0 0 / 0.3), oklch(0 0 0 / 0.55));
+  }
+}
+
+.toc-dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+
+  & .widget-title {
+    margin: 0;
+  }
+}

@@ -1,7 +1,0 @@
-<!--/*
-  依序渲染一個側邊欄元件清單。props：list — 清單變數名稱（leftWidgets 或 rightWidgets）
-  階段 5 會實作各元件；目前只輸出元件外框
-*/-->
-<section th:each="widget : ${ {{list}} }" class="widget" th:data-widget="${widget.type}">
-  <h2 class="widget-title" th:text="${widget.type}">Widget</h2>
-</section>

@@ -1,0 +1,22 @@
+<!--/* 最新文章：依發布時間排序（置頂文章不優先） */-->
+<th:block
+  th:with="
+    count=${theme.config.sidebar?.recentPostsCount},
+    size=${count != null and #strings.toString(count) matches '^([1-9]|1[0-9]|20)$' ? #conversions.convert(count, 'java.lang.Integer') : 5},
+    recentPosts=${postFinder.list({page: 1, size: size, sort: {'spec.publishTime,desc'}})}
+  "
+>
+  <section th:if="${not #lists.isEmpty(recentPosts.items)}" class="widget widget-recent-posts">
+    <h2 class="widget-title" th:text="#{widget.recentPosts}">Recent posts</h2>
+    <ol class="recent-posts">
+      <li th:each="post : ${recentPosts.items}">
+        <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}">Post title</a>
+        <time
+          th:datetime="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+          th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+          >2026-01-01</time
+        >
+      </li>
+    </ol>
+  </section>
+</th:block>

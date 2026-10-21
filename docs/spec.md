@@ -7,7 +7,7 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 4（版面骨架）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
+- **目前狀態**：階段 5（側邊欄）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
 - **下一步**：從「第 9 節 實作階段與進度」的第一個未完成階段開始。
 - 專案資料夾已改名為 `halo-theme-lattice`（#17）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。
@@ -277,13 +277,23 @@ halo-theme-lattice/
     - 二欄時，左右兩個元件清單依序合併到同一個側邊欄（使用者同意，2026-10-21；整站佈局預設值與自動減少欄數的規則也一併同意）
     - 三欄但只有一邊的清單有元件時，退成二欄；兩邊都沒有元件時為單欄（主內容寬度限制在 `--content-width`）
     - 768–1279px 的三欄縮成二欄，右側邊欄接在左側邊欄下方；< 768px 單欄，側邊欄在主內容下方
-  - 階段 5 預定的設定鍵：`theme.config.sidebar.leftWidgets`、`rightWidgets`（每個項目至少有 `type`）。目前 `partials/sidebar-widgets.html` 只輸出元件外框
   - 導覽列：Logo 用系統設定的 `site.logo`（Halo 文件建議不要在主題設定重複提供）；主選單用 `menuFinder.getPrimary()`，最多兩層（桌面為下拉選單，手機在漢堡選單中縮排顯示）；漢堡選單的斷點為 768px；捲動偵測用 `IntersectionObserver`
   - 搜尋：`pluginFinder.available('PluginSearchWidget')` 才輸出按鈕；插件腳本以 `defer` 載入、晚於主題腳本執行，所以在 `load` 事件後才檢查 `window.SearchWidget`。`tokens.css` 把配色傳給 `--halo-search-widget-*` 變數
   - 語系切換：查證 Halo 2.26.0 的 `ThemeLocaleContextResolver`，語系依序取自 `?language=` 參數、`language` cookie、登入者語系、`Accept-Language`。切換時寫入 `language` 與 `lattice_lang_chosen` cookie 後重新載入。`lattice_lang_chosen` 目前沒有程式讀取（Ethereal 用它搭配「站長預設語系」功能，本主題規格沒有這個功能）
   - 頁尾：版權年份、站名、Powered by Halo、主題名稱；版面最後輸出 `<halo:footer />`（Halo 規定，用於系統的頁尾程式碼注入）。主題名稱的連結等 GitHub remote 設定後再補
   - 已在 Halo 2.26.0 驗證：各種佈局設定組合與退回規則、二層選單、手機漢堡選單、捲動後導覽列縮小、三種語系切換、搜尋彈窗配色；390px 寬度沒有橫向捲動
-- [ ] **階段 5：側邊欄**：8 個元件、左右側邊欄的 array 設定、吸頂、手機版目錄浮動按鈕
+- [x] **階段 5：側邊欄**：8 個元件、左右側邊欄的 array 設定、吸頂、手機版目錄浮動按鈕（2026-10-21）
+  - 設定：`sidebar` group（`leftWidgets`、`rightWidgets`、`announcement`、`recentPostsCount`）、`profile` group（`avatar`、`nickname`、`bio`、`socials`）。清單項目欄位為 `type`、`sticky`，自訂 HTML 另有 `html`（用 `if: "$value.type === 'customHtml'"` 只在該類型顯示）
+  - 元件類型值：`profile`、`announcement`、`categories`、`tags`、`recentPosts`、`siteStats`、`toc`、`customHtml`；預設左側為個人資料、文章目錄（吸頂），右側為最新文章、分類、標籤
+  - 查證：Halo 會在重載主題時，把 `settings.yaml` 頂層欄位的預設值寫入 ConfigMap
+  - 渲染：`layout.html` 依側邊欄逐一處理清單，先輸出不吸頂的元件（`.sidebar-static`），再把吸頂的元件集中到 `.sidebar-sticky`，避免多個吸頂元件互相重疊。元件片段只在模板中出現一次（`partials/sidebar-widget.html` 依 `type` 切換）
+  - 三欄縮成二欄（768–1279px）時，`src/js/sidebar.ts` 把左側邊欄的吸頂元件移到右側邊欄吸頂區塊的最前面，因為上方的左側邊欄只佔一列，無法停靠
+  - 個人資料：頭像、暱稱、簡介未設定時，分別退回 `site.logo`、`site.title`、`site.subtitle`；社群連結只顯示文字
+  - 分類顯示兩層；最新文章依發布時間排序（不讓置頂文章排在前面），數量限 1–20，不合法時用 5
+  - 文章目錄：`src/js/toc.ts` 讀取 `[data-toc-source]` 中的 h2–h4，產生巢狀清單並補上缺少的 id；標題進入導覽列下方 80px 內即視為目前段落。< 768px 時隱藏側邊欄中的目錄，改用右下角浮動按鈕開啟 `<dialog>`
+  - 為了測試目錄，先建立最小的 `src/post.html`（標題與正文），完整內容在階段 6
+  - Thymeleaf 注意事項：同一元素上 `th:if` 先於 `th:with` 執行，所以條件依賴區域變數時，`th:with` 要放在外層 `th:block`；`<include>` 會被整個替換，所以 `th:if`、`th:case` 也要放在外層 `th:block`
+  - 已在 Halo 2.26.0 驗證：8 個元件、深淺色、各佈局下的吸頂（含三欄縮成二欄）、目錄高亮與點擊跳轉、手機浮動按鈕與對話框
 - [ ] **階段 6：內容頁面**：`index`（含簡介區塊、兩種列表樣式）、`post`（目錄、highlight.js、複製按鈕、留言）、`page`、`archives`、`categories`、`category`、`tags`、`tag`、`author`、分頁
 - [ ] **階段 7：額外頁面與錯誤頁**：`page_about`、`links`、`error/404`、`error/error`
 - [ ] **階段 8：SEO 與轉場**：`seo-head` partial、JSON-LD、View Transitions、`advanced` group
