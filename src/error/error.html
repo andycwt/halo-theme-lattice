@@ -1,0 +1,10 @@
+<include src="layout.html" page="error">
+  <template name="head">
+    <title th:text="|#{error.generic.title} - ${site.title}|">Error</title>
+  </template>
+  <include
+    src="error-content.html"
+    title="error.generic.title"
+    description="error.generic.description"
+  />
+</include>

@@ -7,6 +7,11 @@ spec:
   author:
     name: WeiTsung Chu
   description: A clean, content-first Halo theme with configurable layout and colors.
+  customTemplates:
+    page:
+      - name: 關於頁
+        description: 頂部顯示個人資料（頭像、暱稱、簡介、社群連結，沿用主題設定的「個人資料」），下方為頁面正文
+        file: page_about.html
   settingName: theme-lattice-setting
   configMapName: theme-lattice-configMap
   version: 0.1.0

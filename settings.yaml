@@ -271,3 +271,18 @@ spec:
           label: 內建程式碼高亮
           help: 使用主題內建的 highlight.js。已啟用 Shiki 等程式碼高亮插件時，主題會自動停用內建高亮，避免重複處理。
           value: true
+        - $formkit: switch
+          name: aboutComments
+          label: 關於頁顯示留言
+          help: 套用「關於頁」模板的頁面是否顯示留言區（需安裝留言插件）。
+          value: true
+        - $formkit: switch
+          name: linksComments
+          label: 友鏈頁顯示留言
+          help: 友鏈頁（需安裝 plugin-links）是否顯示留言區（需安裝留言插件）。
+          value: true
+        - $formkit: textarea
+          name: linksIntro
+          label: 友鏈頁說明
+          help: 顯示在友鏈頁底部，例如申請友鏈的方式。可使用 HTML，留空時不顯示。
+          value: ""

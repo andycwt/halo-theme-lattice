@@ -4,7 +4,7 @@
       <template name="head"><title>...</title></template>
       主內容
     </include>
-  props：page — 頁面類型，目前只用來判斷是否套用「文章頁佈局」覆寫（page="post"）
+  props：page — 頁面類型。post 套用「文章頁佈局」覆寫並輸出手機版目錄按鈕；error 不顯示側邊欄
 */-->
 <!doctype html>
 <html
@@ -44,7 +44,7 @@
       hasLeft=${not #lists.isEmpty(leftWidgets)},
       hasRight=${not #lists.isEmpty(rightWidgets)},
       sidebarPosition=${
-        not hasLeft and not hasRight ? 'none'
+        pageType == 'error' or (not hasLeft and not hasRight) ? 'none'
         : layoutMode == 'three-column' ? (hasLeft and hasRight ? 'both' : (hasLeft ? 'left' : 'right'))
         : (layoutMode == 'two-column-left' ? 'left' : 'right')
       }

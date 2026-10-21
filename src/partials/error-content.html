@@ -1,0 +1,7 @@
+<!--/* 錯誤頁內容。props：title、description — 訊息的 i18n key */-->
+<section class="error-page">
+  <p class="error-status" th:text="${error.status}">404</p>
+  <h1 class="error-title" th:text="#{{{title}}}">Error</h1>
+  <p class="error-description" th:text="#{{{description}}}">Description</p>
+  <a class="button" th:href="@{/}" th:text="#{error.backHome}">Back to home</a>
+</section>

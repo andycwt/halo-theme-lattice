@@ -1,0 +1,26 @@
+<!--/* 關於頁（自訂頁面模板）：頂部沿用主題設定的「個人資料」，下方為頁面正文 */-->
+<include src="layout.html" page="page">
+  <template name="head">
+    <title th:text="|${singlePage.spec.title} - ${site.title}|">About</title>
+  </template>
+  <article class="article">
+    <h1 class="sr-only" th:text="${singlePage.spec.title}">About</h1>
+    <header class="about-profile">
+      <include src="profile-body.html" />
+    </header>
+    <th:block th:with="content=${singlePage.content}"
+      ><include src="article-content.html"
+    /></th:block>
+  </article>
+  <section
+    th:if="${haloCommentEnabled and theme.config.post?.aboutComments != false}"
+    class="comments"
+    th:aria-label="#{post.comments}"
+  >
+    <halo:comment
+      group="content.halo.run"
+      kind="SinglePage"
+      th:attr="name=${singlePage.metadata.name}"
+    />
+  </section>
+</include>

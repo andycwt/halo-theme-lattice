@@ -7,10 +7,16 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 6（內容頁面）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
-- **下一步**：從「第 9 節 實作階段與進度」的第一個未完成階段開始。
+- **目前狀態**：階段 0–7 已完成並經使用者驗收（2026-10-21）。開發流程見 `docs/development.md`。
+- **下一步**：階段 8（SEO 與轉場）：`seo-head` partial、JSON-LD、View Transitions、`advanced` group。目前各頁面的 `<title>` 暫時寫在各頁的 `head` slot，階段 8 要集中到 `seo-head`。
+- **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。使用者確認後才 commit。
+- **本機開發環境的狀態**（只存在本機 Docker volume，不在版控中）：
+  - Halo 2.26.0 在 http://localhost:8090 ，測試帳號 `admin` / `Admin12345`，介面語言繁中；Lattice 已安裝並啟用
+  - 已安裝插件：Halo 預裝的 Shiki、搜尋、留言等，另外安裝了 plugin-links 2.5.0
+  - 測試資料：約 16 篇文章（含置頂、長標題、封面、程式碼、6 章目錄測試文）、3 個分類（含子分類）、15 個標籤、2 個友鏈分組與 6 個連結、4 張 SVG 封面；選單與預設分類已改為繁中，「關於」頁套用關於頁模板
+  - 主題設定：三欄佈局、8 個側邊欄元件全開、首頁簡介區塊開啟、個人資料與友鏈頁說明填了範例內容
+  - 啟動方式：`pnpm halo:up`，再執行 `pnpm dev`
 - 專案資料夾已改名為 `halo-theme-lattice`（#17）。
-- **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。
 
 ---
 
@@ -302,10 +308,19 @@ halo-theme-lattice/
   - 複製按鈕：所有 `pre` 都有。Shiki 渲染的區塊由插件自帶的複製按鈕負責（主題若包住它的 `pre` 會讓 Shiki 無法渲染）。Clipboard API 只在 HTTPS 或 localhost 可用，以 HTTP 架設的站點改用 `execCommand("copy")`
   - 留言：依 Halo 文件以 `haloCommentEnabled` 判斷是否輸出 `<halo:comment>`（文章與獨立頁面）
   - 插件配色：`<html>` 加上 Halo 官方組件讀取的 `data-color-scheme`，與 `data-color-mode` 同步。搜尋與評論組件的 CSS 變數放在不分層的 `src/css/plugins.css`，因為評論組件的未分層樣式會在 `[data-color-scheme=dark]` 上設定自己的預設色，會蓋過分層的 tokens
-  - 查證：Halo 2.26.0 起，主題可以提供 `templates/layout.html` 的 `html(head, content)` 片段，讓插件前台頁面（例如友鏈）共用主題外框；本主題的 layout 是建置期 partial，目前沒有輸出這個檔案，留到階段 7 評估
+  - 查證：Halo 2.26.0 起，主題可以提供 `templates/layout.html` 的 `html(head, content)` 片段，讓插件前台頁面共用主題外框（評估結果見階段 7）
   - 測試資料：新增 14 篇文章（含置頂、長標題、封面、程式碼）、3 個分類（含子分類）、15 個標籤，以及 4 張 SVG 封面。標籤在文章之後才建立，Halo 的標籤文章數統計因此停在 0，這是測試資料建立順序造成的，不影響主題
   - 已在 Halo 2.26.0 驗證：所有頁面路由、兩種列表樣式、分頁、簡介區塊（含背景圖）、highlight.js（停用 Shiki 時）、Shiki 共存、複製按鈕（真實點擊並讀回剪貼簿）、留言組件配色（深淺色）、390px 下所有頁面沒有橫向捲動
-- [ ] **階段 7：額外頁面與錯誤頁**：`page_about`、`links`、`error/404`、`error/error`
+- [x] **階段 7：額外頁面與錯誤頁**：`page_about`、`links`、`error/404`、`error/error`（2026-10-21）
+  - `theme.yaml` 宣告自訂頁面模板「關於頁」（`page_about.html`）。個人資料內容抽成 `partials/profile-body.html`，側邊欄元件與關於頁共用同一份資料與退回規則
+  - `post` group 新增 `aboutComments`、`linksComments`（預設開啟）與 `linksIntro`
+  - **友鏈頁說明的來源**：規格要求友鏈頁底部有正文區塊，但 plugin-links 只提供標題。使用者選擇在主題設定新增「友鏈頁說明」欄位（`linksIntro`，可寫 HTML，留空不顯示）（2026-10-21）
+  - 友鏈頁使用 plugin-links 的 `groups` 變數依分組顯示，未分組的連結由插件放在 `ungrouped` 虛擬分組，顯示為「其他連結」；沒有 logo 時顯示名稱首字。留言使用 `group="plugin.halo.run" kind="Plugin"`，`name` 為 `pluginName`
+  - 查證：plugin-links 2.5.0 要求 Halo ≥ 2.26.0。模板只使用舊版也有的 `groups`、`linksTitle`、`pluginName`；Halo 2.25.0 的相容測試（階段 10）需要搭配舊版插件確認。頁面標題來自插件設定（預設「链接」），站長可在插件設定修改
+  - 查證：以 API 建立連結時若 `groupName` 為空字串，該連結不會出現在 `groups`（插件只把未設定 `groupName` 的連結歸入 `ungrouped`）；從後台建立的連結不受影響
+  - 錯誤頁：`error/404.html` 與通用的 `error/error.html`，顯示狀態碼、說明與「回到首頁」按鈕；`page="error"` 時不顯示側邊欄。Halo 只在請求接受 HTML 時才渲染錯誤模板（API 請求回傳 JSON）；安全過濾器（403）與 URL 解析錯誤（400）不經過主題模板
+  - 頁面布局契約（`templates/layout.html`）：plugin-links 直接渲染主題的 `links.html`，不需要這個契約；需要它的是瞬間、相簿等自帶頁面的插件，屬於第二版範圍，因此暫不實作，Halo 會使用內建的 fallback 布局
+  - 已在 Halo 2.26.0 驗證：關於頁、友鏈頁（三個分組、無 logo 的首字、說明區塊、深淺色）、兩個留言開關、404 與通用錯誤頁、390px 無橫向捲動
 - [ ] **階段 8：SEO 與轉場**：`seo-head` partial、JSON-LD、View Transitions、`advanced` group
 - [ ] **階段 9：i18n 補齊與驗證**：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本
 - [ ] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查

@@ -70,7 +70,7 @@
   text-align: center;
 }
 
-.profile-avatar {
+.widget-profile .profile-avatar {
   width: 5rem;
   height: 5rem;
   margin: 0 auto var(--space-3);
@@ -78,17 +78,17 @@
   object-fit: cover;
 }
 
-.profile-name {
+.widget-profile .profile-name {
   font-size: var(--text-lg);
   font-weight: 700;
 }
 
-.profile-bio {
+.widget-profile .profile-bio {
   margin-top: var(--space-1);
   color: var(--c-text-muted);
 }
 
-.profile-links {
+.widget-profile .profile-links {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

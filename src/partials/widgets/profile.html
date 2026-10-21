@@ -1,27 +1,3 @@
-<!--/* 個人資料：未設定的欄位退回使用站點的 Logo、標題、副標題 */-->
-<section
-  class="widget widget-profile"
-  th:with="
-    profile=${theme.config.profile},
-    avatar=${not #strings.isEmpty(profile?.avatar) ? profile.avatar : site.logo},
-    nickname=${not #strings.isEmpty(profile?.nickname) ? profile.nickname : site.title},
-    bio=${not #strings.isEmpty(profile?.bio) ? profile.bio : site.subtitle}
-  "
->
-  <img
-    th:if="${not #strings.isEmpty(avatar)}"
-    class="profile-avatar"
-    th:src="${avatar}"
-    alt=""
-    width="80"
-    height="80"
-    loading="lazy"
-  />
-  <p class="profile-name" th:text="${nickname}">Nickname</p>
-  <p th:if="${not #strings.isEmpty(bio)}" class="profile-bio" th:text="${bio}">Bio</p>
-  <ul th:if="${not #lists.isEmpty(profile?.socials)}" class="profile-links">
-    <li th:each="social : ${profile.socials}" th:if="${not #strings.isEmpty(social.url)}">
-      <a th:href="${social.url}" th:text="${social.name}" target="_blank" rel="noopener me">Link</a>
-    </li>
-  </ul>
+<section class="widget widget-profile">
+  <include src="profile-body.html" />
 </section>
