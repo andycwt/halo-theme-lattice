@@ -1,0 +1,35 @@
+/*
+ * 傳給 Halo 官方插件（搜尋、評論組件）的配色。
+ * 插件的樣式表沒有使用 @layer，並在 [data-color-scheme=dark] 上設定自己的預設色；
+ * 未分層的樣式一律勝過分層樣式，所以這個檔案刻意不放進 @layer，並用較高的權重覆蓋。
+ */
+:root,
+:root[data-color-scheme] {
+  /* ---------- 傳給 plugin-search-widget 的配色 ---------- */
+  --halo-search-widget-base-font-family: var(--font-body);
+  --halo-search-widget-base-rounded: var(--radius-lg);
+  --halo-search-widget-base-bg-color: var(--c-bg);
+  --halo-search-widget-primary-color: var(--c-accent);
+  --halo-search-widget-muted-color: var(--c-text-muted);
+  --halo-search-widget-content-color: var(--c-text);
+  --halo-search-widget-modal-bg-color: var(--c-bg);
+  --halo-search-widget-modal-layer-color: light-dark(oklch(0 0 0 / 0.35), oklch(0 0 0 / 0.6));
+  --halo-search-widget-hit-bg-color: var(--c-surface);
+  --halo-search-widget-divider-color: var(--c-border);
+  --halo-search-widget-kbd-border-color: var(--c-border);
+  --halo-search-widget-kbd-shadow: none;
+
+  /* ---------- 傳給 plugin-comment-widget 的配色 ---------- */
+  --halo-cw-primary-1-color: var(--c-accent);
+  --halo-cw-primary-2-color: var(--c-accent-hover);
+  --halo-cw-primary-3-color: var(--c-accent-soft);
+  --halo-cw-primary-contrast-color: var(--c-on-accent);
+  --halo-cw-text-1-color: var(--c-text);
+  --halo-cw-text-2-color: var(--c-text-muted);
+  --halo-cw-text-3-color: var(--c-text-muted);
+  --halo-cw-muted-1-color: var(--c-border);
+  --halo-cw-muted-2-color: var(--c-surface);
+  --halo-cw-muted-3-color: var(--c-bg);
+  --halo-cw-base-rounded: var(--radius-md);
+  --halo-cw-base-font-family: var(--font-body);
+}

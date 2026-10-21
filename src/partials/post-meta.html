@@ -1,0 +1,23 @@
+<!--/* 文章資訊列：發布日期、作者、分類。呼叫端需提供變數 post（ListedPostVo 或 PostVo） */-->
+<ul class="post-meta">
+  <li>
+    <span class="sr-only" th:text="#{post.publishedAt}">Published</span>
+    <time
+      th:datetime="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+      th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+      >2026-01-01</time
+    >
+  </li>
+  <li th:if="${post.owner != null}">
+    <span class="sr-only" th:text="#{post.author}">Author</span>
+    <a th:href="@{${post.owner.permalink}}" th:text="${post.owner.displayName}">Author</a>
+  </li>
+  <li th:unless="${#lists.isEmpty(post.categories)}" class="post-meta-categories">
+    <span class="sr-only" th:text="#{post.categories}">Categories</span>
+    <th:block th:each="category, iter : ${post.categories}">
+      <a th:href="@{${category.status.permalink}}" th:text="${category.spec.displayName}"
+        >Category</a
+      ><span th:unless="${iter.last}">, </span>
+    </th:block>
+  </li>
+</ul>

@@ -234,3 +234,40 @@ spec:
               help: "也可以填 mailto: 開頭的電子郵件連結。"
               value: ""
               validation: required
+
+    - group: home
+      label: 首頁
+      formSchema:
+        - $formkit: switch
+          name: heroEnabled
+          label: 顯示首頁簡介區塊
+          help: 只在首頁第一頁顯示。
+          value: false
+        - $formkit: text
+          name: heroTitle
+          label: 大標題
+          help: 留空時使用站點標題。
+          value: ""
+        - $formkit: textarea
+          name: heroSubtitle
+          label: 副標題
+          help: 留空時使用站點副標題。
+          value: ""
+        - $formkit: attachment
+          name: heroImage
+          label: 背景圖
+          help: 選填。有背景圖時，文字會加上半透明遮罩以維持可讀性。
+          accepts:
+            - "image/*"
+          aspectRatio: 16/9
+          width: 12rem
+          value: ""
+
+    - group: post
+      label: 文章
+      formSchema:
+        - $formkit: switch
+          name: highlightEnabled
+          label: 內建程式碼高亮
+          help: 使用主題內建的 highlight.js。已啟用 Shiki 等程式碼高亮插件時，主題會自動停用內建高亮，避免重複處理。
+          value: true

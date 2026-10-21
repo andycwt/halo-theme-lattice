@@ -1,10 +1,64 @@
-<!--/* 文章頁（階段 5 的最小版本，供目錄元件使用；完整內容在階段 6） */-->
 <include src="layout.html" page="post">
   <template name="head">
     <title th:text="|${post.spec.title} - ${site.title}|">Post</title>
   </template>
-  <article>
-    <h1 th:text="${post.spec.title}">Post title</h1>
-    <div class="prose" data-toc-source th:utext="${post.content.content}"></div>
+  <article class="article">
+    <header class="article-header">
+      <h1 class="article-title" th:text="${post.spec.title}">Post title</h1>
+      <include src="post-meta.html" />
+    </header>
+    <img
+      th:if="${not #strings.isEmpty(post.spec.cover)}"
+      class="article-cover"
+      th:src="${post.spec.cover}"
+      th:srcset="|${thumbnail.gen(post.spec.cover, 'm')} 800w, ${thumbnail.gen(post.spec.cover, 'l')} 1200w, ${thumbnail.gen(post.spec.cover, 'xl')} 1600w|"
+      sizes="(min-width: 768px) 46rem, 100vw"
+      alt=""
+    />
+    <th:block th:with="content=${post.content}"><include src="article-content.html" /></th:block>
+    <ul
+      th:unless="${#lists.isEmpty(post.tags)}"
+      class="tag-cloud article-tags"
+      th:aria-label="#{post.tags}"
+    >
+      <li th:each="tag : ${post.tags}">
+        <a
+          class="tag-pill"
+          th:href="@{${tag.status.permalink}}"
+          th:text="|# ${tag.spec.displayName}|"
+          >#tag</a
+        >
+      </li>
+    </ul>
   </article>
+
+  <!--/* 上一篇（較舊）與下一篇（較新） */-->
+  <th:block th:with="cursor=${postFinder.cursor(post.metadata.name)}">
+    <nav
+      th:if="${cursor.hasPrevious() or cursor.hasNext()}"
+      class="post-nav"
+      th:aria-label="#{post.navigation}"
+    >
+      <a
+        th:if="${cursor.hasNext()}"
+        class="post-nav-link post-nav-next"
+        th:href="@{${cursor.next.status.permalink}}"
+      >
+        <span class="post-nav-label" th:text="#{post.newer}">Newer</span>
+        <span class="post-nav-title" th:text="${cursor.next.spec.title}">Title</span>
+      </a>
+      <a
+        th:if="${cursor.hasPrevious()}"
+        class="post-nav-link post-nav-prev"
+        th:href="@{${cursor.previous.status.permalink}}"
+      >
+        <span class="post-nav-label" th:text="#{post.older}">Older</span>
+        <span class="post-nav-title" th:text="${cursor.previous.spec.title}">Title</span>
+      </a>
+    </nav>
+  </th:block>
+
+  <section th:if="${haloCommentEnabled}" class="comments" th:aria-label="#{post.comments}">
+    <halo:comment group="content.halo.run" kind="Post" th:attr="name=${post.metadata.name}" />
+  </section>
 </include>

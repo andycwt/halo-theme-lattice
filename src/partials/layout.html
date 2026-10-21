@@ -18,6 +18,7 @@
   "
   th:lang="${#locale.toLanguageTag()}"
   th:data-color-mode="${colorMode}"
+  th:data-color-scheme="${colorMode}"
   th:data-color-mode-locked="${colorModeLocked ? 'true' : null}"
   th:data-font="${style?.bodyFont == 'serif' ? 'serif' : 'sans'}"
   th:style="${(primaryColor != null ? '--lattice-primary: ' + primaryColor + ';' : '') + (not #strings.isEmpty(customFontFamily) ? '--font-custom: ' + customFontFamily + ';' : '')}"

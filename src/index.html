@@ -1,11 +1,41 @@
 <include src="layout.html" page="index">
   <template name="head">
-    <title th:text="${site.title}">Lattice</title>
+    <title
+      th:text="${posts.page > 1} ? |${site.title} - #{pagination.status(${posts.page}, ${posts.totalPages})}| : ${site.title}"
+    >
+      Lattice
+    </title>
   </template>
-  <h1 th:text="${site.title}">Lattice</h1>
-  <ul>
-    <li th:each="post : ${posts.items}">
-      <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}">Post title</a>
-    </li>
-  </ul>
+  <th:block th:with="home=${theme.config.home}">
+    <section
+      th:if="${home?.heroEnabled == true and posts.page <= 1}"
+      th:with="heroImage=${home.heroImage}"
+      class="hero"
+      th:classappend="${not #strings.isEmpty(heroImage)} ? 'hero-with-image'"
+      th:style="${not #strings.isEmpty(heroImage)} ? |--hero-image: url('${heroImage}')|"
+    >
+      <h1
+        class="hero-title"
+        th:text="${not #strings.isEmpty(home.heroTitle) ? home.heroTitle : site.title}"
+      >
+        Lattice
+      </h1>
+      <th:block
+        th:with="subtitle=${not #strings.isEmpty(home.heroSubtitle) ? home.heroSubtitle : site.subtitle}"
+      >
+        <p th:if="${not #strings.isEmpty(subtitle)}" class="hero-subtitle" th:text="${subtitle}">
+          Subtitle
+        </p>
+      </th:block>
+    </section>
+    <h1
+      th:unless="${home?.heroEnabled == true and posts.page <= 1}"
+      class="sr-only"
+      th:text="${site.title}"
+    >
+      Lattice
+    </h1>
+  </th:block>
+  <include src="post-list.html" />
+  <th:block th:with="pageResult=${posts}"><include src="pagination.html" /></th:block>
 </include>

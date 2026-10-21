@@ -1,0 +1,52 @@
+<!--/*
+  文章列表（首頁、分類、標籤、作者頁共用）。呼叫端需提供變數 posts（UrlContextListResult<ListedPostVo>）。
+  樣式依「文章列表樣式」設定：text（純文字）或 card（卡片）；卡片樣式下沒有封面圖的文章退回文字樣式。
+*/-->
+<th:block th:with="listStyle=${theme.config.layout?.postListStyle == 'card' ? 'card' : 'text'}">
+  <ol
+    th:unless="${#lists.isEmpty(posts.items)}"
+    class="post-list"
+    th:data-list-style="${listStyle}"
+  >
+    <li
+      th:each="post : ${posts.items}"
+      th:with="hasCover=${listStyle == 'card' and not #strings.isEmpty(post.spec.cover)}"
+      class="post-item"
+      th:classappend="${hasCover} ? 'post-item-card' : 'post-item-text'"
+    >
+      <a
+        th:if="${hasCover}"
+        class="post-item-cover"
+        th:href="@{${post.status.permalink}}"
+        tabindex="-1"
+        aria-hidden="true"
+      >
+        <img
+          th:src="${post.spec.cover}"
+          th:srcset="|${thumbnail.gen(post.spec.cover, 's')} 400w, ${thumbnail.gen(post.spec.cover, 'm')} 800w, ${thumbnail.gen(post.spec.cover, 'l')} 1200w|"
+          sizes="(min-width: 768px) 46rem, 100vw"
+          alt=""
+          loading="lazy"
+          decoding="async"
+        />
+      </a>
+      <div class="post-item-body">
+        <h2 class="post-item-title">
+          <span th:if="${post.spec.pinned}" class="badge" th:text="#{post.pinned}">Pinned</span>
+          <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}">Post title</a>
+        </h2>
+        <include src="post-meta.html" />
+        <p
+          th:if="${not #strings.isEmpty(post.status.excerpt)}"
+          class="post-item-excerpt"
+          th:text="${post.status.excerpt}"
+        >
+          Excerpt
+        </p>
+      </div>
+    </li>
+  </ol>
+  <p th:if="${#lists.isEmpty(posts.items)}" class="empty-state" th:text="#{list.empty}">
+    No posts yet.
+  </p>
+</th:block>

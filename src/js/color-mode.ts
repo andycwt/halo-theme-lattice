@@ -18,6 +18,8 @@ function currentMode(): ColorMode {
 
 function applyMode(mode: ColorMode, buttons: Iterable<HTMLButtonElement>) {
   root.dataset.colorMode = mode;
+  // Halo 官方搜尋、評論組件讀取的深淺色標記
+  root.dataset.colorScheme = mode;
   for (const button of buttons) {
     const label = button.dataset[`label${mode[0].toUpperCase()}${mode.slice(1)}`] ?? mode;
     button.setAttribute("aria-label", label);

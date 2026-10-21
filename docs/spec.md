@@ -7,7 +7,7 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 5（側邊欄）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
+- **目前狀態**：階段 6（內容頁面）已完成，等待使用者驗收。開發流程見 `docs/development.md`。
 - **下一步**：從「第 9 節 實作階段與進度」的第一個未完成階段開始。
 - 專案資料夾已改名為 `halo-theme-lattice`（#17）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。
@@ -291,10 +291,20 @@ halo-theme-lattice/
   - 個人資料：頭像、暱稱、簡介未設定時，分別退回 `site.logo`、`site.title`、`site.subtitle`；社群連結只顯示文字
   - 分類顯示兩層；最新文章依發布時間排序（不讓置頂文章排在前面），數量限 1–20，不合法時用 5
   - 文章目錄：`src/js/toc.ts` 讀取 `[data-toc-source]` 中的 h2–h4，產生巢狀清單並補上缺少的 id；標題進入導覽列下方 80px 內即視為目前段落。< 768px 時隱藏側邊欄中的目錄，改用右下角浮動按鈕開啟 `<dialog>`
-  - 為了測試目錄，先建立最小的 `src/post.html`（標題與正文），完整內容在階段 6
   - Thymeleaf 注意事項：同一元素上 `th:if` 先於 `th:with` 執行，所以條件依賴區域變數時，`th:with` 要放在外層 `th:block`；`<include>` 會被整個替換，所以 `th:if`、`th:case` 也要放在外層 `th:block`
   - 已在 Halo 2.26.0 驗證：8 個元件、深淺色、各佈局下的吸頂（含三欄縮成二欄）、目錄高亮與點擊跳轉、手機浮動按鈕與對話框
-- [ ] **階段 6：內容頁面**：`index`（含簡介區塊、兩種列表樣式）、`post`（目錄、highlight.js、複製按鈕、留言）、`page`、`archives`、`categories`、`category`、`tags`、`tag`、`author`、分頁
+- [x] **階段 6：內容頁面**：`index`（含簡介區塊、兩種列表樣式）、`post`（目錄、highlight.js、複製按鈕、留言）、`page`、`archives`、`categories`、`category`、`tags`、`tag`、`author`、分頁（2026-10-21）
+  - 設定：`home` group（`heroEnabled`、`heroTitle`、`heroSubtitle`、`heroImage`）、`post` group（`highlightEnabled`）。關於頁與友鏈頁的留言開關留到階段 7
+  - 共用片段：`post-list.html`（兩種樣式共用）、`post-meta.html`、`pagination.html`、`article-content.html`（文章與獨立頁面的正文）
+  - 文章列表：卡片樣式在列表寬度 ≥ 36rem 時改為封面在左、文字在右（container query），較窄時封面在上；封面用 `thumbnail.gen` 產生 `srcset`
+  - 程式碼高亮：highlight.js 只註冊 26 種常用語言，打包成獨立 chunk（gzip 約 42KB），頁面有 `pre > code` 時才動態載入；沒有標示或不認得的語言當作純文字，不自動偵測
+  - 偵測到 `plugin-shiki` 啟用時，自動停用內建高亮（使用者同意，2026-10-21）；後台開關仍可手動關閉
+  - 複製按鈕：所有 `pre` 都有。Shiki 渲染的區塊由插件自帶的複製按鈕負責（主題若包住它的 `pre` 會讓 Shiki 無法渲染）。Clipboard API 只在 HTTPS 或 localhost 可用，以 HTTP 架設的站點改用 `execCommand("copy")`
+  - 留言：依 Halo 文件以 `haloCommentEnabled` 判斷是否輸出 `<halo:comment>`（文章與獨立頁面）
+  - 插件配色：`<html>` 加上 Halo 官方組件讀取的 `data-color-scheme`，與 `data-color-mode` 同步。搜尋與評論組件的 CSS 變數放在不分層的 `src/css/plugins.css`，因為評論組件的未分層樣式會在 `[data-color-scheme=dark]` 上設定自己的預設色，會蓋過分層的 tokens
+  - 查證：Halo 2.26.0 起，主題可以提供 `templates/layout.html` 的 `html(head, content)` 片段，讓插件前台頁面（例如友鏈）共用主題外框；本主題的 layout 是建置期 partial，目前沒有輸出這個檔案，留到階段 7 評估
+  - 測試資料：新增 14 篇文章（含置頂、長標題、封面、程式碼）、3 個分類（含子分類）、15 個標籤，以及 4 張 SVG 封面。標籤在文章之後才建立，Halo 的標籤文章數統計因此停在 0，這是測試資料建立順序造成的，不影響主題
+  - 已在 Halo 2.26.0 驗證：所有頁面路由、兩種列表樣式、分頁、簡介區塊（含背景圖）、highlight.js（停用 Shiki 時）、Shiki 共存、複製按鈕（真實點擊並讀回剪貼簿）、留言組件配色（深淺色）、390px 下所有頁面沒有橫向捲動
 - [ ] **階段 7：額外頁面與錯誤頁**：`page_about`、`links`、`error/404`、`error/error`
 - [ ] **階段 8：SEO 與轉場**：`seo-head` partial、JSON-LD、View Transitions、`advanced` group
 - [ ] **階段 9：i18n 補齊與驗證**：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本

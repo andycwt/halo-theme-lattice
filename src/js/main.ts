@@ -1,3 +1,4 @@
+import { initCodeBlocks } from "./code-blocks";
 import { initColorMode } from "./color-mode";
 import { initLangSwitch } from "./lang-switch";
 import { initNavbar } from "./navbar";
@@ -11,3 +12,4 @@ initLangSwitch();
 initSearch();
 initSidebar();
 initToc();
+initCodeBlocks();

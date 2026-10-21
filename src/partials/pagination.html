@@ -1,0 +1,28 @@
+<!--/* 分頁。呼叫端需提供變數 pageResult（UrlContextListResult） */-->
+<nav
+  th:if="${pageResult.hasPrevious() or pageResult.hasNext()}"
+  class="pagination"
+  th:aria-label="#{pagination.label}"
+>
+  <a
+    th:if="${pageResult.hasPrevious()}"
+    class="pagination-link"
+    th:href="@{${pageResult.prevUrl}}"
+    rel="prev"
+  >
+    <span aria-hidden="true">←</span> <span th:text="#{pagination.prev}">Newer</span>
+  </a>
+  <span
+    class="pagination-status"
+    th:text="#{pagination.status(${pageResult.page}, ${pageResult.totalPages})}"
+    >1 / 1</span
+  >
+  <a
+    th:if="${pageResult.hasNext()}"
+    class="pagination-link"
+    th:href="@{${pageResult.nextUrl}}"
+    rel="next"
+  >
+    <span th:text="#{pagination.next}">Older</span> <span aria-hidden="true">→</span>
+  </a>
+</nav>

@@ -1,0 +1,29 @@
+<include src="layout.html" page="author">
+  <template name="head">
+    <title th:text="|${author.spec.displayName} - ${site.title}|">Author</title>
+  </template>
+  <header class="page-header author-header">
+    <img
+      th:if="${not #strings.isEmpty(author.spec.avatar)}"
+      class="author-avatar"
+      th:src="${author.spec.avatar}"
+      alt=""
+      width="72"
+      height="72"
+    />
+    <div>
+      <p class="page-kicker" th:text="#{author.kicker}">Author</p>
+      <h1 class="page-title" th:text="${author.spec.displayName}">Author</h1>
+      <p
+        th:if="${not #strings.isEmpty(author.spec.bio)}"
+        class="page-description"
+        th:text="${author.spec.bio}"
+      >
+        Bio
+      </p>
+      <p class="page-description" th:text="#{archives.count(${posts.total})}">0 posts</p>
+    </div>
+  </header>
+  <include src="post-list.html" />
+  <th:block th:with="pageResult=${posts}"><include src="pagination.html" /></th:block>
+</include>

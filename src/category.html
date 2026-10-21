@@ -1,0 +1,19 @@
+<include src="layout.html" page="category">
+  <template name="head">
+    <title th:text="|${category.spec.displayName} - ${site.title}|">Category</title>
+  </template>
+  <header class="page-header">
+    <p class="page-kicker" th:text="#{categories.kicker}">Category</p>
+    <h1 class="page-title" th:text="${category.spec.displayName}">Category</h1>
+    <p
+      th:if="${not #strings.isEmpty(category.spec.description)}"
+      class="page-description"
+      th:text="${category.spec.description}"
+    >
+      Description
+    </p>
+    <p class="page-description" th:text="#{archives.count(${posts.total})}">0 posts</p>
+  </header>
+  <include src="post-list.html" />
+  <th:block th:with="pageResult=${posts}"><include src="pagination.html" /></th:block>
+</include>

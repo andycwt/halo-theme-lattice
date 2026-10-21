@@ -1,0 +1,12 @@
+<include src="layout.html" page="tag">
+  <template name="head">
+    <title th:text="|# ${tag.spec.displayName} - ${site.title}|">Tag</title>
+  </template>
+  <header class="page-header">
+    <p class="page-kicker" th:text="#{tags.kicker}">Tag</p>
+    <h1 class="page-title" th:text="|# ${tag.spec.displayName}|"># Tag</h1>
+    <p class="page-description" th:text="#{archives.count(${posts.total})}">0 posts</p>
+  </header>
+  <include src="post-list.html" />
+  <th:block th:with="pageResult=${posts}"><include src="pagination.html" /></th:block>
+</include>

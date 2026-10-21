@@ -1,0 +1,35 @@
+<include src="layout.html" page="archives">
+  <template name="head">
+    <title th:text="|#{archives.title} - ${site.title}|">Archives</title>
+  </template>
+  <header class="page-header">
+    <h1 class="page-title" th:text="#{archives.title}">Archives</h1>
+    <p class="page-description" th:text="#{archives.count(${archives.total})}">0 posts</p>
+  </header>
+  <section th:each="archive : ${archives.items}" class="archive-year">
+    <h2 class="archive-year-title" th:text="${archive.year}">2026</h2>
+    <th:block th:each="month : ${archive.months}">
+      <h3 class="archive-month-title">
+        <a
+          th:href="@{|/archives/${archive.year}/${month.month}|}"
+          th:text="|${archive.year}-${month.month}|"
+          >2026-01</a
+        >
+      </h3>
+      <ol class="archive-list">
+        <li th:each="post : ${month.posts}">
+          <time
+            th:datetime="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+            th:text="${#temporals.format(post.spec.publishTime, 'MM-dd')}"
+            >01-01</time
+          >
+          <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}">Post title</a>
+        </li>
+      </ol>
+    </th:block>
+  </section>
+  <p th:if="${#lists.isEmpty(archives.items)}" class="empty-state" th:text="#{list.empty}">
+    No posts yet.
+  </p>
+  <th:block th:with="pageResult=${archives}"><include src="pagination.html" /></th:block>
+</include>

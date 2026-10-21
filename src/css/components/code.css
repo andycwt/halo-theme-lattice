@@ -1,0 +1,109 @@
+/* 程式碼區塊：複製按鈕與 highlight.js 配色（色相固定，亮度依深淺色模式調整，皆維持 AA 對比） */
+
+.code-block {
+  position: relative;
+
+  & pre {
+    margin: 0;
+  }
+}
+
+.prose .code-block {
+  margin-top: 1.25em;
+}
+
+.code-copy {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-sm);
+  background: var(--c-bg);
+  color: var(--c-text-muted);
+  font-size: var(--text-xs);
+  opacity: 0;
+  transition: opacity var(--duration-fast) var(--ease);
+
+  .code-block:hover &,
+  &:focus-visible {
+    opacity: 1;
+  }
+
+  /* 觸控裝置沒有 hover，按鈕常駐 */
+  @media (hover: none) {
+    opacity: 1;
+  }
+
+  &:hover {
+    color: var(--c-text);
+  }
+}
+
+:root {
+  --hl-keyword: var(--c-accent);
+  --hl-string: light-dark(oklch(0.48 0.12 150), oklch(0.8 0.12 150));
+  --hl-number: light-dark(oklch(0.52 0.14 50), oklch(0.8 0.12 60));
+  --hl-title: light-dark(oklch(0.48 0.16 300), oklch(0.8 0.11 300));
+  --hl-type: light-dark(oklch(0.48 0.1 210), oklch(0.8 0.09 210));
+  --hl-meta: var(--c-text-muted);
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-doctag,
+.hljs-section {
+  color: var(--hl-keyword);
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition,
+.hljs-attribute,
+.hljs-template-tag {
+  color: var(--hl-string);
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-variable.language_ {
+  color: var(--hl-number);
+}
+
+.hljs-title,
+.hljs-title.function_,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: var(--hl-title);
+}
+
+.hljs-type,
+.hljs-built_in,
+.hljs-title.class_,
+.hljs-attr,
+.hljs-property,
+.hljs-params {
+  color: var(--hl-type);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta {
+  color: var(--hl-meta);
+  font-style: italic;
+}
+
+.hljs-deletion {
+  color: light-dark(oklch(0.5 0.17 25), oklch(0.78 0.13 25));
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}

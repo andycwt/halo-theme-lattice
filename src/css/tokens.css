@@ -152,18 +152,4 @@
   --header-height-compact: 3.25rem;
   --z-header: 50;
   --z-dropdown: 60;
-
-  /* ---------- 傳給 plugin-search-widget 的配色 ---------- */
-  --halo-search-widget-base-font-family: var(--font-body);
-  --halo-search-widget-base-rounded: var(--radius-lg);
-  --halo-search-widget-base-bg-color: var(--c-bg);
-  --halo-search-widget-primary-color: var(--c-accent);
-  --halo-search-widget-muted-color: var(--c-text-muted);
-  --halo-search-widget-content-color: var(--c-text);
-  --halo-search-widget-modal-bg-color: var(--c-bg);
-  --halo-search-widget-modal-layer-color: light-dark(oklch(0 0 0 / 0.35), oklch(0 0 0 / 0.6));
-  --halo-search-widget-hit-bg-color: var(--c-surface);
-  --halo-search-widget-divider-color: var(--c-border);
-  --halo-search-widget-kbd-border-color: var(--c-border);
-  --halo-search-widget-kbd-shadow: none;
 }

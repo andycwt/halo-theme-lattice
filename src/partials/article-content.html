@@ -1,0 +1,15 @@
+<!--/*
+  文章與獨立頁面的正文。呼叫端需提供變數 content（ContentVo）。
+  data-toc-source：目錄來源；data-highlight：是否載入內建程式碼高亮（已有 Shiki 插件時停用）；
+  data-copy-*：複製按鈕的文字（src/js/code-blocks.ts）
+*/-->
+<div
+  class="prose article-content"
+  data-toc-source
+  data-code-blocks
+  th:data-highlight="${theme.config.post?.highlightEnabled != false and not pluginFinder.available('shiki')}"
+  th:data-copy-label="#{code.copy}"
+  th:data-copied-label="#{code.copied}"
+  th:data-copy-failed-label="#{code.copyFailed}"
+  th:utext="${content.content}"
+></div>

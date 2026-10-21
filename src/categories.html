@@ -1,0 +1,35 @@
+<include src="layout.html" page="categories">
+  <template name="head">
+    <title th:text="|#{categories.title} - ${site.title}|">Categories</title>
+  </template>
+  <header class="page-header">
+    <h1 class="page-title" th:text="#{categories.title}">Categories</h1>
+  </header>
+  <!--/* 顯示兩層，與側邊欄分類元件一致 */-->
+  <ul th:unless="${#lists.isEmpty(categories)}" class="category-grid">
+    <li th:each="category : ${categories}" class="category-card">
+      <a class="category-card-link" th:href="@{${category.status.permalink}}">
+        <span class="category-card-name" th:text="${category.spec.displayName}">Category</span>
+        <span class="term-count" th:text="#{archives.count(${category.postCount})}">0 posts</span>
+      </a>
+      <p
+        th:if="${not #strings.isEmpty(category.spec.description)}"
+        class="category-card-description"
+        th:text="${category.spec.description}"
+      >
+        Description
+      </p>
+      <ul th:unless="${#lists.isEmpty(category.children)}" class="category-children">
+        <li th:each="child : ${category.children}">
+          <a class="tag-pill" th:href="@{${child.status.permalink}}">
+            <span th:text="${child.spec.displayName}">Child</span>
+            <span class="term-count" th:text="${child.postCount}">0</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <p th:if="${#lists.isEmpty(categories)}" class="empty-state" th:text="#{list.empty}">
+    No posts yet.
+  </p>
+</include>
