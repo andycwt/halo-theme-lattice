@@ -1,0 +1,4 @@
+templates/
+dist/
+pnpm-lock.yaml
+*.md

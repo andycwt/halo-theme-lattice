@@ -1,0 +1,12 @@
+# 依賴
+node_modules/
+
+# 建置產物
+templates/
+dist/
+
+# 系統與編輯器
+.DS_Store
+.idea/
+.vscode/
+*.log

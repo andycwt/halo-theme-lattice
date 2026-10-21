@@ -1,0 +1,15 @@
+apiVersion: theme.halo.run/v1alpha1
+kind: Theme
+metadata:
+  name: theme-lattice
+spec:
+  displayName: Lattice
+  author:
+    name: WeiTsung Chu
+  description: A clean, content-first Halo theme with configurable layout and colors.
+  settingName: theme-lattice-setting
+  configMapName: theme-lattice-configMap
+  version: 0.1.0
+  requires: ">=2.25.0"
+  license:
+    - name: MIT

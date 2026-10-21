@@ -1,0 +1,18 @@
+/* 階段 1 的最小樣式，階段 3 會由設計系統取代 */
+body {
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  max-width: 48rem;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+
+  &:focus {
+    left: 1rem;
+    top: 1rem;
+  }
+}

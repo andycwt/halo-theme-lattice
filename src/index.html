@@ -1,0 +1,25 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org" th:lang="${#locale.toLanguageTag()}">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text="${site.title}">Lattice</title>
+    <link rel="stylesheet" href="./css/main.css" />
+    <script type="module" src="./js/main.ts"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main" th:text="#{common.skipToContent}">Skip to content</a>
+    <main id="main">
+      <h1 th:text="${site.title}">Lattice</h1>
+      <ul>
+        <li th:each="post : ${posts.items}">
+          <a th:href="@{${post.status.permalink}}" th:text="${post.spec.title}">Post title</a>
+        </li>
+      </ul>
+    </main>
+    <footer>
+      <span th:text="#{footer.poweredBy}">Powered by</span>
+      <a href="https://www.halo.run" target="_blank" rel="noopener">Halo</a>
+    </footer>
+  </body>
+</html>

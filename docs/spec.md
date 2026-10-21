@@ -7,9 +7,9 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：規格已定案，**尚未開始實作**，`src/` 是空的。
+- **目前狀態**：階段 1（專案骨架）已完成，等待使用者驗收。
 - **下一步**：從「第 9 節 實作階段與進度」的第一個未完成階段開始。
-- **使用者待辦**：把專案資料夾從 `halo-theme` 改名為 `halo-theme-lattice`（#17）。改名後 Claude Code 的專案記憶路徑會跟著改變，這是預期中的行為。
+- 專案資料夾已改名為 `halo-theme-lattice`（#17）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。
 
 ---
@@ -248,7 +248,13 @@ halo-theme-lattice/
 每個階段完成後，先讓使用者驗收，再進入下一個階段。完成的階段請打勾並註記日期。
 
 - [x] **階段 0：規格定案**：本文件完成；`CLAUDE.md` 目錄規範已更新（2026-10-21）
-- [ ] **階段 1：專案骨架**：`package.json`、`vite.config.ts`、`tsconfig.json`、`theme.yaml`、空的 `settings.yaml`、三個語系檔、`LICENSE`、`NOTICE`、`.gitignore`（含 `templates/`、`node_modules/`）、Prettier、pre-commit hook；建置出可以安裝的最小主題（只有 `index.html`）
+- [x] **階段 1：專案骨架**：`package.json`、`vite.config.ts`、`tsconfig.json`、`theme.yaml`、空的 `settings.yaml`、三個語系檔、`LICENSE`、`NOTICE`、`.gitignore`（含 `templates/`、`node_modules/`）、Prettier、pre-commit hook；建置出可以安裝的最小主題（只有 `index.html`）（2026-10-21）
+  - 常用指令：`pnpm dev`（watch 建置）、`pnpm build`（型別檢查 + 建置）、`pnpm package`（建置 + 打包到 `dist/`）、`pnpm format`
+  - pre-commit hook 由 `simple-git-hooks` 安裝（`pnpm install` 時自動設定），執行 lint-staged（Prettier）與 `tsc --noEmit`
+  - 根目錄多了 `pnpm-workspace.yaml`：pnpm 12 要在這裡用 `allowBuilds` 核准 `simple-git-hooks` 的安裝腳本，否則 `pnpm install` 會報錯
+  - 已在拋棄式 Halo 2.26.0 容器中驗證：zip 可安裝、可啟用、首頁正常渲染、`/themes/theme-lattice/assets/*` 可載入、`zh-TW` 語系字串正確
+  - 查證事實：Halo 2.26.0 映像檔預裝 `plugin-comment-widget`、`plugin-search-widget`、`plugin-shiki`（程式碼高亮）
+  - 打包修正（使用者同意，2026-10-21）：`theme-package` 預設只打包 `templates/`、`i18n/`、`LICENSE`、`README.md`、`*.yaml` 等，不含 `NOTICE`，且會把 `pnpm-lock.yaml`、`pnpm-workspace.yaml` 一起打包。`pnpm package` 在打包後執行 `src/scripts/normalize-package.mjs`（使用 `adm-zip`），補上 `NOTICE` 並移除這兩個 pnpm 檔案
 - [ ] **階段 2：本機開發環境**：`dev/docker-compose.yaml`，確認在 Halo 2.26.0 上可以即時預覽
 - [ ] **階段 3：設計系統**：CSS 變數與 tokens、主色推算、深淺色模式（含防閃爍腳本與切換按鈕）、字型堆疊、基礎排版
 - [ ] **階段 4：版面骨架**：`layout` partial、導覽列（含語系切換、搜尋入口）、頁尾、二欄或三欄佈局與響應式、`settings.yaml` 的 `layout` 和 `style` group
