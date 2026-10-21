@@ -7,14 +7,14 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 0–7 已完成並經使用者驗收（2026-10-21）。開發流程見 `docs/development.md`。
-- **下一步**：階段 8（SEO 與轉場）：`seo-head` partial、JSON-LD、View Transitions、`advanced` group。目前各頁面的 `<title>` 暫時寫在各頁的 `head` slot，階段 8 要集中到 `seo-head`。
+- **目前狀態**：階段 0–7 已完成並經使用者驗收（2026-10-21）；階段 8 已完成，等待使用者驗收。開發流程見 `docs/development.md`。
+- **下一步**：階段 9（i18n 補齊與驗證）：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。使用者確認後才 commit。
 - **本機開發環境的狀態**（只存在本機 Docker volume，不在版控中）：
   - Halo 2.26.0 在 http://localhost:8090 ，測試帳號 `admin` / `Admin12345`，介面語言繁中；Lattice 已安裝並啟用
   - 已安裝插件：Halo 預裝的 Shiki、搜尋、留言等，另外安裝了 plugin-links 2.5.0
   - 測試資料：約 16 篇文章（含置頂、長標題、封面、程式碼、6 章目錄測試文）、3 個分類（含子分類）、15 個標籤、2 個友鏈分組與 6 個連結、4 張 SVG 封面；選單與預設分類已改為繁中，「關於」頁套用關於頁模板
-  - 主題設定：三欄佈局、8 個側邊欄元件全開、首頁簡介區塊開啟、個人資料與友鏈頁說明填了範例內容
+  - 主題設定：二欄佈局（側邊欄在左）、8 個側邊欄元件全開、首頁簡介區塊開啟、個人資料與友鏈頁說明填了範例內容、預設分享圖為 `/upload/cover-1.svg`
   - 啟動方式：`pnpm halo:up`，再執行 `pnpm dev`
 - 專案資料夾已改名為 `halo-theme-lattice`（#17）。
 
@@ -204,9 +204,10 @@ halo-theme-lattice/
 ### 6.8 SEO（#26）
 
 - 集中在 `src/partials/seo-head.html`
-- 輸出內容：`<title>`、`description`、`canonical`、Open Graph、Twitter Card、JSON-LD（文章 `BlogPosting`、首頁 `WebSite`、全站 `BreadcrumbList`）
+- 輸出內容：`<title>`、`canonical`、Open Graph、Twitter Card、JSON-LD（文章 `BlogPosting`、首頁 `WebSite`、全站 `BreadcrumbList`）
+- **不輸出 `<meta name="description">`**：Halo 會在首頁、文章、單頁面、分類、標籤自動注入 description，主題重複輸出會產生兩個同名標籤（使用者同意，2026-10-21，依 Halo 主題 SEO 文件）。`og:description`、`twitter:description` 仍由主題輸出
 - 文章沒有封面圖時，分享圖退回使用後台設定的「預設分享圖」
-- 後台開關：「關閉主題 SEO 輸出」（避免和 SEO 插件重複輸出）
+- 後台開關分成兩個（使用者同意，2026-10-21，依 Halo 建議）：「輸出頁面元資料」（canonical、Open Graph、Twitter Card）與「輸出結構化資料」（JSON-LD），讓站長只關掉與 SEO 插件重複的部分。`<title>` 一律輸出，不受開關影響
 
 ---
 
@@ -222,7 +223,7 @@ halo-theme-lattice/
 | `style` 外觀 | 主色（color picker）；預設深淺色模式；鎖定模式開關；正文字型（無襯線或襯線）；自訂字型 CSS 網址與 `font-family` |
 | `home` 首頁 | 簡介區塊開關、大標題、副標題、背景圖 |
 | `post` 文章 | 程式碼高亮開關；關於頁和友鏈頁是否顯示留言 |
-| `advanced` 進階 | View Transitions 開關；關閉主題 SEO 輸出；預設分享圖 |
+| `advanced` 進階 | View Transitions 開關；輸出頁面元資料開關；輸出結構化資料開關；預設分享圖 |
 
 ---
 
@@ -321,7 +322,15 @@ halo-theme-lattice/
   - 錯誤頁：`error/404.html` 與通用的 `error/error.html`，顯示狀態碼、說明與「回到首頁」按鈕；`page="error"` 時不顯示側邊欄。Halo 只在請求接受 HTML 時才渲染錯誤模板（API 請求回傳 JSON）；安全過濾器（403）與 URL 解析錯誤（400）不經過主題模板
   - 頁面布局契約（`templates/layout.html`）：plugin-links 直接渲染主題的 `links.html`，不需要這個契約；需要它的是瞬間、相簿等自帶頁面的插件，屬於第二版範圍，因此暫不實作，Halo 會使用內建的 fallback 布局
   - 已在 Halo 2.26.0 驗證：關於頁、友鏈頁（三個分組、無 logo 的首字、說明區塊、深淺色）、兩個留言開關、404 與通用錯誤頁、390px 無橫向捲動
-- [ ] **階段 8：SEO 與轉場**：`seo-head` partial、JSON-LD、View Transitions、`advanced` group
+- [x] **階段 8：SEO 與轉場**：`seo-head` partial、JSON-LD、View Transitions、`advanced` group（2026-10-21）
+  - `advanced` group：`viewTransitions`、`seoMetadata`、`seoStructuredData`（皆預設開啟）、`defaultShareImage`
+  - `partials/seo-head.html` 依 `pageType` 整理出 `seo` map（title、description、type、path、image、page）後統一輸出；各頁面不再自己寫 `<title>`。`pageType` 移到 `<html>` 的 `th:with`，讓 `<head>` 也能使用
+  - 標題格式：`頁面標題 - 第 N 頁 - 站名`（首頁為站名，第 2 頁以後加頁碼）
+  - canonical：首頁、文章、頁面、分類、標籤、作者（皆只在第 1 頁）、分類總覽、標籤總覽、友鏈頁。分頁的第 2 頁以後與歸檔（含年月歸檔，無法從模板得知目前路徑）不輸出，依 Halo 文件「分頁不能沿用第一頁的 canonical」
+  - 分享圖：頁面封面 → 預設分享圖 → 站點 Logo；相對路徑會加上 `site.url` 轉成絕對網址。分享描述截斷在 200 字
+  - JSON-LD 以 SpEL 建立 map，再用 Thymeleaf JavaScript 內嵌序列化，確保是合法 JSON；`.?[value != null]` 去掉沒有值的欄位。首頁 `WebSite`、文章 `BlogPosting`（含作者、發布與修改時間、標籤為 keywords）、首頁與錯誤頁以外的頁面 `BreadcrumbList`（文章的麵包屑經過第一個分類）
+  - 轉場：`<head>` 內 `@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto } }`；導覽列設定 `view-transition-name: site-header`，換頁時不跟內容一起淡入淡出
+  - 已在 Halo 2.26.0 驗證：15 種頁面各只有一個 `<title>` 與最多一個（Halo 注入的）description，JSON-LD 全部能解析；三個開關分別生效；沒有封面的文章使用預設分享圖；Chrome 中真實點擊站內連結會觸發跨頁轉場，減少動態效果或關閉設定時不觸發
 - [ ] **階段 9：i18n 補齊與驗證**：三個語系翻譯完整、主題結構驗證腳本、效能預算腳本
 - [ ] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查
 

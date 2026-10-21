@@ -1,15 +1,17 @@
 <!--/*
   全站版面。用法：
     <include src="layout.html" page="post">
-      <template name="head"><title>...</title></template>
+      <template name="head">頁面專屬的 head 內容（選填）</template>
       主內容
     </include>
-  props：page — 頁面類型。post 套用「文章頁佈局」覆寫並輸出手機版目錄按鈕；error 不顯示側邊欄
+  props：page — 頁面類型（index、post、page、archives、categories、category、tags、tag、author、links、error）。
+         決定 SEO 資料來源（seo-head.html）；post 套用「文章頁佈局」覆寫並輸出手機版目錄按鈕；error 不顯示側邊欄
 */-->
 <!doctype html>
 <html
   xmlns:th="https://www.thymeleaf.org"
   th:with="
+    pageType='{{page}}',
     style=${theme.config.style},
     colorMode=${#lists.contains({'light', 'dark'}, style?.colorMode) ? style.colorMode : 'auto'},
     colorModeLocked=${style?.lockColorMode == true},
@@ -26,8 +28,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <include src="seo-head.html" />
     <slot name="head" />
     <include src="style-head.html" />
+    <!--/* 換頁轉場：瀏覽器原生 View Transitions，零 JavaScript；減少動態效果時不啟用 */-->
+    <style th:if="${theme.config.advanced?.viewTransitions != false}">
+      @media (prefers-reduced-motion: no-preference) {
+        @view-transition {
+          navigation: auto;
+        }
+      }
+    </style>
     <link rel="stylesheet" href="/css/main.css" />
     <script type="module" src="/js/main.ts"></script>
   </head>
@@ -37,7 +48,6 @@
       layoutModes=${ {'two-column-left', 'two-column-right', 'three-column'} },
       siteLayout=${#lists.contains(layoutModes, layoutConfig?.siteLayout) ? layoutConfig.siteLayout : 'two-column-right'},
       postLayout=${#lists.contains(layoutModes, layoutConfig?.postLayout) ? layoutConfig.postLayout : null},
-      pageType='{{page}}',
       layoutMode=${pageType == 'post' and postLayout != null ? postLayout : siteLayout},
       leftWidgets=${theme.config.sidebar?.leftWidgets},
       rightWidgets=${theme.config.sidebar?.rightWidgets},

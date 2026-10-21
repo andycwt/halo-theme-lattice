@@ -286,3 +286,31 @@ spec:
           label: 友鏈頁說明
           help: 顯示在友鏈頁底部，例如申請友鏈的方式。可使用 HTML，留空時不顯示。
           value: ""
+
+    - group: advanced
+      label: 進階
+      formSchema:
+        - $formkit: switch
+          name: viewTransitions
+          label: 換頁轉場效果
+          help: 使用瀏覽器原生的 View Transitions 在換頁時淡入淡出，不需要 JavaScript。不支援的瀏覽器與開啟「減少動態效果」的訪客會直接換頁。
+          value: true
+        - $formkit: switch
+          name: seoMetadata
+          label: 輸出頁面元資料
+          help: canonical、Open Graph、Twitter Card。已使用 SEO 插件輸出這些標籤時請關閉，避免重複。頁面描述（description）由 Halo 自動輸出。
+          value: true
+        - $formkit: switch
+          name: seoStructuredData
+          label: 輸出結構化資料
+          help: JSON-LD（首頁 WebSite、文章 BlogPosting、麵包屑 BreadcrumbList）。已使用 SEO 插件輸出結構化資料時請關閉。
+          value: true
+        - $formkit: attachment
+          name: defaultShareImage
+          label: 預設分享圖
+          help: 文章或頁面沒有封面圖時，社群分享使用這張圖。建議 1200 × 630。留空時使用系統設定的 Logo。
+          accepts:
+            - "image/*"
+          aspectRatio: 1200/630
+          width: 12rem
+          value: ""

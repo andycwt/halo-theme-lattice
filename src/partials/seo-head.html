@@ -1,0 +1,131 @@
+<!--/*
+  SEO：<title>、canonical、Open Graph、Twitter Card、JSON-LD（docs/spec.md 第 6.8 節）。
+  依 layout 的 pageType 取出各頁面的資料，整理成 seo 這個 map 後統一輸出。
+  <meta name="description"> 由 Halo 注入，主題不重複輸出。
+
+  seo 的欄位：
+    title       頁面標題（不含站名；首頁為 null）
+    description 社群分享用的描述
+    type        og:type
+    path        canonical 路徑；分頁的第 2 頁以後、年月歸檔不輸出 canonical
+    image       頁面自己的分享圖（可能為空，退回預設分享圖或站點 Logo）
+    page        分頁頁碼
+*/-->
+<th:block
+  th:with="
+    advanced=${theme.config.advanced},
+    siteUrl=${#strings.endsWith(site.url, '/') ? #strings.substring(site.url, 0, #strings.length(site.url) - 1) : site.url},
+    seo=${
+      pageType == 'post' ? {title: post.spec.title, description: post.status.excerpt, type: 'article', path: post.status.permalink, image: post.spec.cover, page: 1}
+      : pageType == 'page' ? {title: singlePage.spec.title, description: singlePage.status.excerpt, type: 'website', path: singlePage.status.permalink, image: singlePage.spec.cover, page: 1}
+      : pageType == 'category' ? {title: category.spec.displayName, description: category.spec.description, type: 'website', path: category.status.permalink, image: category.spec.cover, page: posts.page}
+      : pageType == 'tag' ? {title: tag.spec.displayName, description: null, type: 'website', path: tag.status.permalink, image: tag.spec.cover, page: posts.page}
+      : pageType == 'author' ? {title: author.spec.displayName, description: author.spec.bio, type: 'profile', path: author.status.permalink, image: author.spec.avatar, page: posts.page}
+      : pageType == 'archives' ? {title: #messages.msg('archives.title'), description: null, type: 'website', path: null, image: null, page: archives.page}
+      : pageType == 'categories' ? {title: #messages.msg('categories.title'), description: null, type: 'website', path: '/categories', image: null, page: 1}
+      : pageType == 'tags' ? {title: #messages.msg('tags.title'), description: null, type: 'website', path: '/tags', image: null, page: 1}
+      : pageType == 'links' ? {title: linksTitle, description: null, type: 'website', path: '/links', image: null, page: 1}
+      : pageType == 'error' ? {title: #messages.msg(error.status == 404 ? 'error.notFound.title' : 'error.generic.title'), description: null, type: 'website', path: null, image: null, page: 1}
+      : {title: null, description: (site.seo?.description ?: site.subtitle), type: 'website', path: '/', image: null, page: posts.page}
+    },
+    pageNumber=${seo['page'] != null and seo['page'] > 1 ? seo['page'] : null},
+    fullTitle=${(seo['title'] != null ? seo['title'] + ' - ' : '') + (pageNumber != null ? #messages.msg('pagination.current', pageNumber) + ' - ' : '') + site.title},
+    canonicalUrl=${seo['path'] != null and pageNumber == null ? siteUrl + seo['path'] : null},
+    rawImage=${not #strings.isEmpty(seo['image']) ? seo['image'] : (not #strings.isEmpty(advanced?.defaultShareImage) ? advanced.defaultShareImage : site.logo)},
+    shareImage=${#strings.isEmpty(rawImage) ? null : (#strings.startsWith(rawImage, 'http') ? rawImage : siteUrl + rawImage)},
+    shareDescription=${#strings.isEmpty(seo['description']) ? null : #strings.abbreviate(#strings.trim(seo['description']), 200)}
+  "
+>
+  <title th:text="${fullTitle}">Lattice</title>
+
+  <!--/* 頁面元資料 */-->
+  <th:block th:if="${advanced?.seoMetadata != false}">
+    <link th:if="${canonicalUrl != null}" rel="canonical" th:href="${canonicalUrl}" />
+    <meta property="og:site_name" th:content="${site.title}" />
+    <meta property="og:type" th:content="${seo['type']}" />
+    <meta property="og:title" th:content="${seo['title'] != null ? seo['title'] : site.title}" />
+    <meta th:if="${canonicalUrl != null}" property="og:url" th:content="${canonicalUrl}" />
+    <meta
+      th:if="${shareDescription != null}"
+      property="og:description"
+      th:content="${shareDescription}"
+    />
+    <meta th:if="${shareImage != null}" property="og:image" th:content="${shareImage}" />
+    <meta property="og:locale" th:content="${#strings.replace(#locale.toString(), '-', '_')}" />
+    <th:block th:if="${pageType == 'post'}">
+      <meta
+        property="article:published_time"
+        th:content="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+      />
+      <meta
+        th:if="${post.status.lastModifyTime != null}"
+        property="article:modified_time"
+        th:content="${#temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+      />
+      <meta
+        th:each="postTag : ${post.tags}"
+        property="article:tag"
+        th:content="${postTag.spec.displayName}"
+      />
+    </th:block>
+    <meta
+      name="twitter:card"
+      th:content="${shareImage != null ? 'summary_large_image' : 'summary'}"
+    />
+    <meta name="twitter:title" th:content="${seo['title'] != null ? seo['title'] : site.title}" />
+    <meta
+      th:if="${shareDescription != null}"
+      name="twitter:description"
+      th:content="${shareDescription}"
+    />
+    <meta th:if="${shareImage != null}" name="twitter:image" th:content="${shareImage}" />
+  </th:block>
+
+  <!--/* 結構化資料（JSON-LD）：以 Thymeleaf 的 JavaScript 內嵌序列化，確保輸出是合法 JSON；.?[value != null] 去掉沒有值的欄位 */-->
+  <th:block th:if="${advanced?.seoStructuredData != false and pageType != 'error'}">
+    <script
+      th:if="${pageType == 'index' and pageNumber == null}"
+      type="application/ld+json"
+      th:inline="javascript"
+    >
+      [[${ {'@context': 'https://schema.org', '@type': 'WebSite', 'name': site.title, 'url': siteUrl + '/', 'description': shareDescription}.?[value != null] }]]
+    </script>
+    <script th:if="${pageType == 'post'}" type="application/ld+json" th:inline="javascript">
+      [[${ {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        'headline': post.spec.title,
+        'description': shareDescription,
+        'url': canonicalUrl,
+        'mainEntityOfPage': canonicalUrl,
+        'image': shareImage,
+        'datePublished': #temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'),
+        'dateModified': #temporals.format(post.status.lastModifyTime ?: post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX'),
+        'author': {'@type': 'Person', 'name': post.owner?.displayName, 'url': post.owner != null ? siteUrl + post.owner.permalink : null},
+        'keywords': post.tags.![spec.displayName]
+      }.?[value != null] }]]
+    </script>
+    <th:block
+      th:with="
+        home=${ {'@type': 'ListItem', 'position': 1, 'name': site.title, 'item': siteUrl + '/'} },
+        crumbs=${
+          pageType == 'post' ? (#lists.isEmpty(post.categories)
+            ? { home, {'@type': 'ListItem', 'position': 2, 'name': post.spec.title, 'item': canonicalUrl} }
+            : { home, {'@type': 'ListItem', 'position': 2, 'name': post.categories[0].spec.displayName, 'item': siteUrl + post.categories[0].status.permalink},
+                {'@type': 'ListItem', 'position': 3, 'name': post.spec.title, 'item': canonicalUrl} })
+          : pageType == 'category' ? { home, {'@type': 'ListItem', 'position': 2, 'name': #messages.msg('categories.title'), 'item': siteUrl + '/categories'},
+                                       {'@type': 'ListItem', 'position': 3, 'name': seo['title'], 'item': siteUrl + seo['path']} }
+          : pageType == 'tag' ? { home, {'@type': 'ListItem', 'position': 2, 'name': #messages.msg('tags.title'), 'item': siteUrl + '/tags'},
+                                  {'@type': 'ListItem', 'position': 3, 'name': seo['title'], 'item': siteUrl + seo['path']} }
+          : pageType == 'archives' ? { home, {'@type': 'ListItem', 'position': 2, 'name': seo['title'], 'item': siteUrl + '/archives'} }
+          : pageType == 'index' ? null
+          : { home, {'@type': 'ListItem', 'position': 2, 'name': seo['title'], 'item': siteUrl + seo['path']} }
+        }
+      "
+    >
+      <script th:if="${crumbs != null}" type="application/ld+json" th:inline="javascript">
+        [[${ {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': crumbs} }]]
+      </script>
+    </th:block>
+  </th:block>
+</th:block>

@@ -1,7 +1,4 @@
 <include src="layout.html" page="archives">
-  <template name="head">
-    <title th:text="|#{archives.title} - ${site.title}|">Archives</title>
-  </template>
   <header class="page-header">
     <h1 class="page-title" th:text="#{archives.title}">Archives</h1>
     <p class="page-description" th:text="#{archives.count(${archives.total})}">0 posts</p>

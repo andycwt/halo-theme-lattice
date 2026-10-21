@@ -1,7 +1,4 @@
 <include src="layout.html" page="post">
-  <template name="head">
-    <title th:text="|${post.spec.title} - ${site.title}|">Post</title>
-  </template>
   <article class="article">
     <header class="article-header">
       <h1 class="article-title" th:text="${post.spec.title}">Post title</h1>

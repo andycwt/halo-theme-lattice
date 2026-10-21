@@ -1,7 +1,4 @@
 <include src="layout.html" page="category">
-  <template name="head">
-    <title th:text="|${category.spec.displayName} - ${site.title}|">Category</title>
-  </template>
   <header class="page-header">
     <p class="page-kicker" th:text="#{categories.kicker}">Category</p>
     <h1 class="page-title" th:text="${category.spec.displayName}">Category</h1>
