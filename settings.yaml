@@ -199,6 +199,14 @@ spec:
           min: 1
           max: 20
           validation: required|between:1,20
+        - $formkit: number
+          name: tagsCount
+          label: 標籤顯示數量
+          help: 標籤元件依文章數由多到少顯示的數量，其餘標籤可從「查看全部」進入標籤頁瀏覽。
+          value: 30
+          min: 1
+          max: 100
+          validation: required|between:1,100
 
     - group: profile
       label: 個人資料

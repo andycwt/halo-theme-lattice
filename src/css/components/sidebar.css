@@ -171,6 +171,22 @@
   }
 }
 
+.widget-more {
+  display: inline-block;
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--c-text-muted);
+  text-decoration: none;
+
+  &::after {
+    content: " →";
+  }
+
+  &:hover {
+    color: var(--c-accent);
+  }
+}
+
 /* ---------- 最新文章 ---------- */
 .recent-posts {
   display: flex;

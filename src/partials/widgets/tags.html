@@ -1,15 +1,49 @@
-<th:block th:with="tags=${tagFinder.listAll()}">
+<!--/*
+  標籤：依文章數由多到少，只顯示前 limit 個；文章數相同時沿用 tagFinder 的順序（新建的在前）。
+  tagFinder 不提供排序，所以在模板中排序：threshold 是第 limit 名的文章數，
+  先依文章數由高到低輸出所有多於 threshold 的標籤，再用 threshold 的標籤補滿 limit 個。
+*/-->
+<th:block
+  th:with="
+    tags=${tagFinder.listAll()},
+    count=${theme.config.sidebar?.tagsCount},
+    max=${count != null and #strings.toString(count) matches '^([1-9]|[1-9][0-9]|100)$' ? #conversions.convert(count, 'java.lang.Integer') : 30}
+  "
+>
   <section th:if="${not #lists.isEmpty(tags)}" class="widget widget-tags">
     <h2 class="widget-title">
       <a th:href="@{/tags}" th:text="#{widget.tags}">Tags</a>
     </h2>
-    <ul class="tag-cloud">
-      <li th:each="tag : ${tags}">
-        <a class="tag-pill" th:href="@{${tag.status.permalink}}">
-          <span th:text="${tag.spec.displayName}">Tag</span>
-          <span class="term-count" th:text="${tag.postCount}">0</span>
-        </a>
-      </li>
-    </ul>
+    <th:block
+      th:with="
+        total=${#lists.size(tags)},
+        limit=${total < max ? total : max},
+        threshold=${#lists.sort(tags.![postCount ?: 0])[total - limit]},
+        above=${#lists.size(tags.?[(postCount ?: 0) > #root.threshold])},
+        levels=${#lists.sort(#lists.toList(#sets.toSet(tags.?[(postCount ?: 0) >= #root.threshold].![postCount ?: 0])))}
+      "
+    >
+      <ul class="tag-cloud">
+        <th:block th:each="i : ${#numbers.sequence(#lists.size(levels) - 1, 0, -1)}">
+          <th:block th:with="level=${levels[i]}">
+            <th:block th:each="tag, stat : ${tags.?[(postCount ?: 0) == #root.level]}">
+              <li th:if="${level > threshold or stat.index < limit - above}">
+                <a class="tag-pill" th:href="@{${tag.status.permalink}}">
+                  <span th:text="${tag.spec.displayName}">Tag</span>
+                  <span class="term-count" th:text="${tag.postCount}">0</span>
+                </a>
+              </li>
+            </th:block>
+          </th:block>
+        </th:block>
+      </ul>
+      <a
+        th:if="${total > limit}"
+        class="widget-more"
+        th:href="@{/tags}"
+        th:text="#{widget.tagsMore(${total})}"
+        >View all tags</a
+      >
+    </th:block>
   </section>
 </th:block>
