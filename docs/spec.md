@@ -9,7 +9,8 @@
 
 - **目前狀態**：階段 0–10 與追加的 #29 已完成（2026-10-22）。開發流程見 `docs/development.md`。
 - **進行中**：使用者在正式站（Halo 2.26.0）試用 0.1.0，試用回饋優先處理。
-- **下一步**：確認 CI 在 GitHub 上通過後，把 repo 轉為 public，再推送第一個 tag 發布。頁面布局契約（`templates/layout.html`）維持第二版範圍（使用者確認，2026-10-22；Halo 後台主題詳情會顯示「缺失」，不影響運作）。
+- **已發布**：v0.1.0（2026-10-22，https://github.com/andycwt/halo-theme-lattice/releases/tag/v0.1.0），CI 與 release workflow 皆已在 GitHub 上實際通過。
+- **下一步**：依試用回饋修正；頁面布局契約（`templates/layout.html`）維持第二版範圍（使用者確認，2026-10-22；Halo 後台主題詳情會顯示「缺失」，不影響運作）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。使用者確認後才 commit。
 - **本機開發環境的狀態**（只存在本機 Docker volume，不在版控中）：
   - Halo 2.26.0 在 http://localhost:8090 ，管理員帳號只存在本機（不記錄在 repo），介面語言繁中；Lattice 已安裝並啟用
@@ -27,7 +28,7 @@
 |---|---|---|
 | 顯示名稱 | Lattice | #16 |
 | `metadata.name` | `theme-lattice`（發布後不可更改） | #16 |
-| GitHub repo | https://github.com/andycwt/halo-theme-lattice（2026-10-21 建立，目前為 private；預定階段 10 完成後轉為 public） | #16 |
+| GitHub repo | https://github.com/andycwt/halo-theme-lattice（2026-10-21 建立，2026-10-22 轉為 public） | #16 |
 | 授權 | MIT | #6 |
 | 版權聲明 | `NOTICE` 中保留 Ethereal（作者：楠南NanNan，MIT）的版權聲明 | #5、#6 |
 | Halo 版本需求 | `requires: ">=2.25.0"` | #8 |
@@ -362,7 +363,7 @@ halo-theme-lattice/
   - 無障礙（axe-core 4.10.2，WCAG 2.1 A/AA + best-practice）：14 種頁面 × 深淺色 × 桌面與 390px 寬度。修正兩項：水平捲動的程式碼區塊加上 `tabindex="0"`，讓鍵盤可以捲動；三欄時兩個 `<aside>` 加上不同的 `aria-label`（`sidebar.primary`、`sidebar.secondary`）。鍵盤 Tab 順序、跳至主要內容、焦點框皆正常
   - 無障礙的剩餘問題都來自插件、主題無法修正：plugin-shiki 的複製按鈕沒有文字標籤、預設配色（github-light／dark）部分顏色對比不足（可在插件設定換配色）；留言插件的編輯區沒有標籤
   - Halo 2.25.0 相容測試（獨立 volume，plugin-links 2.3.0；2.4.0 起要求 Halo 2.26）：全新安裝並啟用、三欄 + 8 個元件 + 首頁簡介、16 種頁面（含英文與簡中）皆正常，日誌沒有模板錯誤，主題狀態 READY
-  - 尚未驗證：CI 與 release workflow 要推上 GitHub 後才會實際執行
+  - CI 與 release workflow 已在 GitHub 上實際通過（`pnpm/action-setup` 升到 v6，改用 Node 24 執行環境）；repo 轉為 public 並發布 v0.1.0（2026-10-22）
 
 ---
 
