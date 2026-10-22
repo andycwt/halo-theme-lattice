@@ -361,6 +361,7 @@ halo-theme-lattice/
   - `style` group 新增 `headingFont`（`body`／`serif`），`<html>` 輸出 `data-heading-font="serif"`；`--font-heading` 與新的 `--heading-weight` 由 tokens 控制
   - 參考：Rackora 的標題使用 Source Serif 4 + 簡中宋體（Noto Serif SC、Songti SC、SimSun）；本主題沿用既有的繁中優先襯線堆疊，沒有複製 Rackora 的程式碼
   - 已在 Halo 2.26.0 驗證：文章頁大標題、正文小標、文章列表標題都改用明體、字重 500；側邊欄元件標題維持黑體
+  - 文章列表標題放大（使用者要求）：由 `--text-xl`（最大 24px）改為 `clamp(1.375rem, 1.2rem + 0.75vw, 1.75rem)`，桌機 28px、手機 22px
 - [x] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查（2026-10-22）
   - `.github/workflows/ci.yml`：push 到 main 與 PR 時執行 `pnpm install --frozen-lockfile` 與 `pnpm check`。`package.json` 加上 `packageManager: pnpm@12.4.2`（pnpm 12 會把它寫進 lockfile）與 `engines.node >=22.12`；CI 使用 Node 24
   - `.github/workflows/release.yml`：推送 `v*` tag 時，確認 tag 與 `theme.yaml` 版本一致，執行 `pnpm format:check` 與 `pnpm package`，再用 `gh release create` 上傳 zip 並自動產生 release notes

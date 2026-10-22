@@ -159,7 +159,8 @@
 }
 
 .post-item-title {
-  font-size: var(--text-xl);
+  /* 介於 xl 與 2xl 之間：桌機約 28px；手機維持 22px，長標題才不會換成太多行 */
+  font-size: clamp(1.375rem, 1.2rem + 0.75vw, 1.75rem);
 
   & a {
     color: var(--c-text);
