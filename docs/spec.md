@@ -7,12 +7,12 @@
 
 ## 1. 給新 session 的快速導覽
 
-- **目前狀態**：階段 0–9 與追加的 #29 已完成並經使用者驗收（2026-10-22）。開發流程見 `docs/development.md`。
-- **進行中**：使用者要把 0.1.0 打包（`pnpm package`）安裝到自己運行中的 Halo 2.26.0 試用；試用回饋優先於階段 10 處理。
-- **下一步**：階段 10（CI 與發布）：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查。公開 repo 前要先移除第 1 節的測試帳號密碼，並把頁尾的主題名稱連到 repo。
+- **目前狀態**：階段 0–10 與追加的 #29 已完成（2026-10-22）。開發流程見 `docs/development.md`。
+- **進行中**：使用者在正式站（Halo 2.26.0）試用 0.1.0，試用回饋優先處理。
+- **下一步**：確認 CI 在 GitHub 上通過後，把 repo 轉為 public，再推送第一個 tag 發布。頁面布局契約（`templates/layout.html`）維持第二版範圍（使用者確認，2026-10-22；Halo 後台主題詳情會顯示「缺失」，不影響運作）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。使用者確認後才 commit。
 - **本機開發環境的狀態**（只存在本機 Docker volume，不在版控中）：
-  - Halo 2.26.0 在 http://localhost:8090 ，測試帳號 `admin` / `Admin12345`，介面語言繁中；Lattice 已安裝並啟用
+  - Halo 2.26.0 在 http://localhost:8090 ，管理員帳號只存在本機（不記錄在 repo），介面語言繁中；Lattice 已安裝並啟用
   - 已安裝插件：Halo 預裝的 Shiki、搜尋、留言等，另外安裝了 plugin-links 2.5.0
   - 測試資料：約 16 篇文章（含置頂、長標題、封面、程式碼、6 章目錄測試文）、3 個分類（含子分類）、15 個標籤、2 個友鏈分組與 6 個連結、4 張 SVG 封面；選單與預設分類已改為繁中，「關於」頁套用關於頁模板
   - 主題設定：二欄佈局（側邊欄在左）、8 個側邊欄元件全開、首頁簡介區塊開啟、個人資料與友鏈頁說明填了範例內容、預設分享圖為 `/upload/cover-1.svg`
@@ -354,7 +354,15 @@ halo-theme-lattice/
   - `sidebar` group 新增 `tagsCount`（1–100，預設 30）；`widgets/tags.html` 依文章數由多到少顯示前 N 個，文章數相同時沿用 `tagFinder.listAll()` 的順序（新建的在前），超過時顯示 `widget.tagsMore` 連結到 `/tags`
   - `tagFinder` 沒有排序參數（已查 2.26.0 的 `TagFinder` 介面），所以在模板中排序：取第 N 名的文章數為門檻，依文章數由高到低輸出高於門檻的標籤，再用等於門檻的標籤補滿 N 個
   - 已在 Halo 2.26.0 驗證：1、2、5、100 與未設定（預設 30）各自正確，未超過時不顯示連結
-- [ ] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查
+- [x] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查（2026-10-22）
+  - `.github/workflows/ci.yml`：push 到 main 與 PR 時執行 `pnpm install --frozen-lockfile` 與 `pnpm check`。`package.json` 加上 `packageManager: pnpm@12.4.2`（pnpm 12 會把它寫進 lockfile）與 `engines.node >=22.12`；CI 使用 Node 24
+  - `.github/workflows/release.yml`：推送 `v*` tag 時，確認 tag 與 `theme.yaml` 版本一致，執行 `pnpm format:check` 與 `pnpm package`，再用 `gh release create` 上傳 zip 並自動產生 release notes
+  - `README.md`：特色、需求、安裝與升級、設定總覽、開發指令、發布步驟、授權與 Ethereal 出處
+  - 公開前準備：頁尾的主題名稱連到 repo；`theme.yaml` 補上 `author.website`、`homepage`、`repo`、`issues`；第 1 節移除本機測試帳號密碼（git 歷史中仍可看到，只用於本機 Docker，沒有風險）
+  - 無障礙（axe-core 4.10.2，WCAG 2.1 A/AA + best-practice）：14 種頁面 × 深淺色 × 桌面與 390px 寬度。修正兩項：水平捲動的程式碼區塊加上 `tabindex="0"`，讓鍵盤可以捲動；三欄時兩個 `<aside>` 加上不同的 `aria-label`（`sidebar.primary`、`sidebar.secondary`）。鍵盤 Tab 順序、跳至主要內容、焦點框皆正常
+  - 無障礙的剩餘問題都來自插件、主題無法修正：plugin-shiki 的複製按鈕沒有文字標籤、預設配色（github-light／dark）部分顏色對比不足（可在插件設定換配色）；留言插件的編輯區沒有標籤
+  - Halo 2.25.0 相容測試（獨立 volume，plugin-links 2.3.0；2.4.0 起要求 Halo 2.26）：全新安裝並啟用、三欄 + 8 個元件 + 首頁簡介、16 種頁面（含英文與簡中）皆正常，日誌沒有模板錯誤，主題狀態 READY
+  - 尚未驗證：CI 與 release workflow 要推上 GitHub 後才會實際執行
 
 ---
 

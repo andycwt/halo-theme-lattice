@@ -6,6 +6,10 @@ spec:
   displayName: Lattice
   author:
     name: WeiTsung Chu
+    website: https://github.com/andycwt
+  homepage: https://github.com/andycwt/halo-theme-lattice
+  repo: https://github.com/andycwt/halo-theme-lattice
+  issues: https://github.com/andycwt/halo-theme-lattice/issues
   description: A clean, content-first Halo theme with configurable layout and colors.
   customTemplates:
     page:

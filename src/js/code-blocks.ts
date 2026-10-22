@@ -39,6 +39,9 @@ function addCopyButton(pre: HTMLPreElement, labels: Record<"copy" | "copied" | "
     timer = window.setTimeout(() => (button.textContent = labels.copy), COPIED_RESET_MS);
   });
 
+  // 長程式碼會水平捲動，讓鍵盤使用者也能聚焦後用方向鍵捲動（WCAG 2.1.1）
+  pre.tabIndex = 0;
+
   // 外層容器讓按鈕固定在右上角，不隨 pre 水平捲動
   const wrapper = document.createElement("div");
   wrapper.className = "code-block";

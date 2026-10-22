@@ -1,0 +1,25 @@
+# push 與 PR 時執行建置和所有檢查（docs/spec.md 第 8.2 節）
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      SKIP_SIMPLE_GIT_HOOKS: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4 # 版本取自 package.json 的 packageManager
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check # 格式、型別、建置、主題結構驗證、效能預算

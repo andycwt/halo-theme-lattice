@@ -1,0 +1,37 @@
+# 推送 v* tag 時打包主題並建立 GitHub Release（docs/spec.md 第 8.2 節）
+# 發布步驟：改 theme.yaml 與 package.json 的版本號 → commit → git tag v<版本> → git push --tags
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      SKIP_SIMPLE_GIT_HOOKS: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: 確認 tag 與 theme.yaml 版本一致
+        run: |
+          version=$(node -e "import('yaml').then(({parse}) => console.log(parse(require('fs').readFileSync('theme.yaml','utf8')).spec.version))")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::tag $GITHUB_REF_NAME 與 theme.yaml 的版本 $version 不一致"
+            exit 1
+          fi
+      - run: pnpm format:check
+      - run: pnpm package # 建置、驗證、效能預算通過後輸出 dist/theme-lattice-<版本>.zip
+      - name: 建立 GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/theme-lattice-*.zip --verify-tag --generate-notes --title "Lattice $GITHUB_REF_NAME"

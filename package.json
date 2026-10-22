@@ -5,6 +5,10 @@
   "description": "A clean, content-first Halo 2.x theme with configurable layout and colors.",
   "license": "MIT",
   "type": "module",
+  "packageManager": "pnpm@12.4.2",
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "dev": "vite build --watch",
     "halo:up": "docker compose -f dev/docker-compose.yaml up -d --wait",

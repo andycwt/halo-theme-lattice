@@ -46,7 +46,7 @@ pnpm halo:down
 HALO_VERSION=2.25.0 pnpm halo:up
 ```
 
-每個 Halo 版本都有自己的資料 volume（`lattice-dev-halo-<版本>`），切換版本不會碰到降版造成的資料庫不相容。第一次用新版本啟動時，需要重新初始化並安裝主題。測完後執行 `HALO_VERSION=2.25.0 pnpm halo:down`。
+每個 Halo 版本都有自己的資料 volume（`lattice-dev-halo-<版本>`），切換版本不會碰到降版造成的資料庫不相容。第一次用新版本啟動時，需要重新初始化並安裝主題。友鏈頁要搭配 plugin-links 2.3.0（2.4.0 起要求 Halo 2.26）。測完後執行 `HALO_VERSION=2.25.0 pnpm halo:down`。
 
 連接埠被占用時，可以用 `HALO_PORT=8091` 改用其他連接埠。
 

@@ -83,6 +83,7 @@
           : { {'primary', {leftWidgets, rightWidgets}} }}"
         th:unless="${sidebarPosition == 'none'}"
         th:class="|sidebar sidebar-${aside[0]}|"
+        th:aria-label="${#messages.msg('sidebar.' + aside[0])}"
       >
         <div
           th:each="stickyGroup : ${ {false, true} }"
