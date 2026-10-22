@@ -46,6 +46,7 @@
 
 .widget-title {
   margin-bottom: var(--space-3);
+  font-family: var(--font-body); /* 元件標題是介面標籤，不跟隨「標題字型」 */
   font-size: var(--text-sm);
   font-weight: 600;
   color: var(--c-text-muted);

@@ -25,6 +25,7 @@
   th:data-color-mode-locked="${colorModeLocked ? 'true' : null}"
   th:data-primary-customizable="${primaryCustomizable ? 'true' : null}"
   th:data-font="${style?.bodyFont == 'serif' ? 'serif' : 'sans'}"
+  th:data-heading-font="${style?.headingFont == 'serif' ? 'serif' : null}"
   th:style="${(primaryColor != null ? '--lattice-primary: ' + primaryColor + ';' : '') + (not #strings.isEmpty(customFontFamily) ? '--font-custom: ' + customFontFamily + ';' : '')}"
 >
   <head>

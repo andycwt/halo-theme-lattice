@@ -91,9 +91,16 @@
   --font-base: var(--font-sans);
   --font-body: var(--font-custom, var(--font-base));
   --font-heading: var(--font-body);
+  --heading-weight: 700;
 
   &[data-font="serif"] {
     --font-base: var(--font-serif);
+  }
+
+  /* 標題字型「明體」：新細明體沒有粗體，用一般字重避免瀏覽器模擬加粗而糊掉 */
+  &[data-heading-font="serif"] {
+    --font-heading: var(--font-serif);
+    --heading-weight: 500;
   }
 
   /* 簡中介面優先使用簡中字型 */

@@ -46,9 +46,9 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
-  font-weight: 700;
+  font-weight: var(--heading-weight);
   line-height: var(--leading-tight);
-  text-wrap: balance;
+  text-wrap: pretty; /* 先填滿每一行，只避免最後一行只剩一兩個字；balance 會讓各行等長而提早換行 */
 }
 
 h1 {

@@ -82,6 +82,16 @@ spec:
               value: sans
             - label: 襯線
               value: serif
+        - $formkit: radio
+          name: headingFont
+          label: 標題字型
+          help: 明體會用較細的字重。Mac 顯示宋體-繁、Windows 顯示新細明體；手機多半沒有內建中文明體，會顯示黑體。
+          value: body
+          options:
+            - label: 跟隨正文
+              value: body
+            - label: 明體（襯線）
+              value: serif
         - $formkit: url
           name: customFontUrl
           label: 自訂字型 CSS 網址

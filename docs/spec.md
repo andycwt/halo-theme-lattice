@@ -201,6 +201,7 @@ halo-theme-lattice/
 
 - 預設使用系統字型堆疊，包含繁中與簡中的常見字型
 - 後台切換：無襯線或襯線（作用於正文）
+- **標題字型**（使用者要求，2026-10-22）：跟隨正文（預設）或明體（襯線）。明體時標題改用襯線字型堆疊（Mac 宋體-繁、Windows 新細明體、Noto Serif TC），字重降為 500，因為新細明體沒有粗體，避免瀏覽器模擬加粗。側邊欄元件標題是介面標籤，維持正文字型。手機多半沒有內建中文明體，會退回黑體
 - 後台欄位：「自訂字型 CSS 網址」，填入後在 `<head>` 引入，並提供對應的 `font-family` 欄位
 
 ### 6.7 頁首與首頁（#22、#18）
@@ -228,7 +229,7 @@ halo-theme-lattice/
 | `layout` 佈局 | 整站佈局模式；文章頁佈局覆寫；文章列表樣式（文字或卡片） |
 | `sidebar` 側邊欄 | 左側邊欄元件清單（array：元件類型、是否吸頂、自訂 HTML 內容）；右側邊欄元件清單（同上）；公告內容；最新文章數量；標籤顯示數量 |
 | `profile` 個人資料 | 頭像、暱稱、簡介、社群連結（array） |
-| `style` 外觀 | 主色（color picker）；允許訪客自訂主色開關；預設深淺色模式；鎖定模式開關；正文字型（無襯線或襯線）；自訂字型 CSS 網址與 `font-family` |
+| `style` 外觀 | 主色（color picker）；允許訪客自訂主色開關；預設深淺色模式；鎖定模式開關；正文字型（無襯線或襯線）；標題字型（跟隨正文或明體）；自訂字型 CSS 網址與 `font-family` |
 | `home` 首頁 | 簡介區塊開關、大標題、副標題、背景圖 |
 | `post` 文章 | 程式碼高亮開關；關於頁和友鏈頁是否顯示留言 |
 | `advanced` 進階 | View Transitions 開關；輸出頁面元資料開關；輸出結構化資料開關；預設分享圖 |
@@ -355,6 +356,11 @@ halo-theme-lattice/
   - `sidebar` group 新增 `tagsCount`（1–100，預設 30）；`widgets/tags.html` 依文章數由多到少顯示前 N 個，文章數相同時沿用 `tagFinder.listAll()` 的順序（新建的在前），超過時顯示 `widget.tagsMore` 連結到 `/tags`
   - `tagFinder` 沒有排序參數（已查 2.26.0 的 `TagFinder` 介面），所以在模板中排序：取第 N 名的文章數為門檻，依文章數由高到低輸出高於門檻的標籤，再用等於門檻的標籤補滿 N 個
   - 已在 Halo 2.26.0 驗證：1、2、5、100 與未設定（預設 30）各自正確，未超過時不顯示連結
+- [x] **追加：標題換行與標題字型**（2026-10-22，正式站試用回饋）
+  - 標題的 `text-wrap` 由 `balance` 改為 `pretty`：`balance` 讓各行等長，長標題第一行明明還有空間就提早換行；`pretty` 先填滿每一行，只避免最後一行只剩一兩個字。Firefox 不支援時退回一般換行
+  - `style` group 新增 `headingFont`（`body`／`serif`），`<html>` 輸出 `data-heading-font="serif"`；`--font-heading` 與新的 `--heading-weight` 由 tokens 控制
+  - 參考：Rackora 的標題使用 Source Serif 4 + 簡中宋體（Noto Serif SC、Songti SC、SimSun）；本主題沿用既有的繁中優先襯線堆疊，沒有複製 Rackora 的程式碼
+  - 已在 Halo 2.26.0 驗證：文章頁大標題、正文小標、文章列表標題都改用明體、字重 500；側邊欄元件標題維持黑體
 - [x] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查（2026-10-22）
   - `.github/workflows/ci.yml`：push 到 main 與 PR 時執行 `pnpm install --frozen-lockfile` 與 `pnpm check`。`package.json` 加上 `packageManager: pnpm@12.4.2`（pnpm 12 會把它寫進 lockfile）與 `engines.node >=22.12`；CI 使用 Node 24
   - `.github/workflows/release.yml`：推送 `v*` tag 時，確認 tag 與 `theme.yaml` 版本一致，執行 `pnpm format:check` 與 `pnpm package`，再用 `gh release create` 上傳 zip 並自動產生 release notes
