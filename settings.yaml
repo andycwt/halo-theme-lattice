@@ -295,6 +295,11 @@ spec:
           help: 使用主題內建的 highlight.js。已啟用 Shiki 等程式碼高亮插件時，主題會自動停用內建高亮，避免重複處理。
           value: true
         - $formkit: switch
+          name: paragraphIndent
+          label: 段落首行縮排
+          help: 文章與獨立頁面的正文段落，第一行縮排兩個字。小標題、條列、引用、表格與程式碼不縮排。
+          value: false
+        - $formkit: switch
           name: aboutComments
           label: 關於頁顯示留言
           help: 套用「關於頁」模板的頁面是否顯示留言區（需安裝留言插件）。

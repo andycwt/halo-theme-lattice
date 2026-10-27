@@ -187,3 +187,9 @@ hr {
     font-size: 0.85em;
   }
 }
+
+/* 段落首行縮排（後台「文章」→「段落首行縮排」）：只作用於文章與頁面正文的直接子段落，
+   列表、引用、表格內的段落不縮排；置中或只放圖片的段落也略過，避免內容偏移 */
+[data-paragraph-indent] .article-content > p:not([style*="text-align"], :has(> img:only-child)) {
+  text-indent: 2em;
+}

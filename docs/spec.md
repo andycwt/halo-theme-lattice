@@ -231,7 +231,7 @@ halo-theme-lattice/
 | `profile` 個人資料 | 頭像、暱稱、簡介、社群連結（array） |
 | `style` 外觀 | 主色（color picker）；允許訪客自訂主色開關；預設深淺色模式；鎖定模式開關；正文字型（無襯線或襯線）；標題字型（跟隨正文或明體）；自訂字型 CSS 網址與 `font-family` |
 | `home` 首頁 | 簡介區塊開關、大標題、副標題、背景圖 |
-| `post` 文章 | 程式碼高亮開關；關於頁和友鏈頁是否顯示留言 |
+| `post` 文章 | 程式碼高亮開關；段落首行縮排開關；關於頁和友鏈頁是否顯示留言 |
 | `advanced` 進階 | View Transitions 開關；輸出頁面元資料開關；輸出結構化資料開關；預設分享圖 |
 
 ---
@@ -362,6 +362,10 @@ halo-theme-lattice/
   - 參考：Rackora 的標題使用 Source Serif 4 + 簡中宋體（Noto Serif SC、Songti SC、SimSun）；本主題沿用既有的繁中優先襯線堆疊，沒有複製 Rackora 的程式碼
   - 已在 Halo 2.26.0 驗證：文章頁大標題、正文小標、文章列表標題都改用明體、字重 500；側邊欄元件標題維持黑體
   - 文章列表標題放大（使用者要求）：由 `--text-xl`（最大 24px）改為 `clamp(1.375rem, 1.2rem + 0.75vw, 1.75rem)`，桌機 28px、手機 22px
+- [x] **追加：段落首行縮排**（2026-10-27，使用者要求）
+  - `post` group 新增 `paragraphIndent`（預設關閉，主題公開後也有非中文使用者）；開啟時 `<html>` 輸出 `data-paragraph-indent`，`.article-content > p` 首行縮排 `2em`（兩個全形字）
+  - 只作用於文章與獨立頁面正文的直接子段落；條列、引用、表格內的段落與小標題不縮排；`text-align` 置中等對齊的段落、只放一張圖片的段落也略過。友鏈頁說明、公告、列表摘要不受影響
+  - 已在 Halo 2.26.0 驗證：一般段落縮排 34px（17px × 2），其餘區塊皆為 0；關閉時不輸出屬性也不縮排。正式站的文章段落開頭沒有手打的全形空白，不會重複縮排
 - [x] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查（2026-10-22）
   - `.github/workflows/ci.yml`：push 到 main 與 PR 時執行 `pnpm install --frozen-lockfile` 與 `pnpm check`。`package.json` 加上 `packageManager: pnpm@12.4.2`（pnpm 12 會把它寫進 lockfile）與 `engines.node >=22.12`；CI 使用 Node 24
   - `.github/workflows/release.yml`：推送 `v*` tag 時，確認 tag 與 `theme.yaml` 版本一致，執行 `pnpm format:check` 與 `pnpm package`，再用 `gh release create` 上傳 zip 並自動產生 release notes
