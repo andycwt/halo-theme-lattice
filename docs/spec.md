@@ -366,6 +366,10 @@ halo-theme-lattice/
   - `post` group 新增 `paragraphIndent`（預設關閉，主題公開後也有非中文使用者）；開啟時 `<html>` 輸出 `data-paragraph-indent`，`.article-content > p` 首行縮排 `2em`（兩個全形字）
   - 只作用於文章與獨立頁面正文的直接子段落；條列、引用、表格內的段落與小標題不縮排；`text-align` 置中等對齊的段落、只放一張圖片的段落也略過。友鏈頁說明、公告、列表摘要不受影響
   - 已在 Halo 2.26.0 驗證：一般段落縮排 34px（17px × 2），其餘區塊皆為 0；關閉時不輸出屬性也不縮排。正式站的文章段落開頭沒有手打的全形空白，不會重複縮排
+- [x] **追加：文章頁顯示摘要**（2026-10-27，使用者要求，參考 Theme-Stack）
+  - 文章頁大標題與資訊列之間顯示摘要（`.article-excerpt`），使用 `--c-text-muted` 淡色、`--text-lg` 字級，和正文區隔
+  - 只顯示手動填寫的摘要（`spec.excerpt.autoGenerate == false`）；自動產生的摘要就是正文開頭，顯示會重複。不另設開關，摘要留空即不顯示
+  - 已在 Halo 2.26.0 驗證：手動摘要的文章顯示在標題下方，自動摘要的文章不輸出
 - [x] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查（2026-10-22）
   - `.github/workflows/ci.yml`：push 到 main 與 PR 時執行 `pnpm install --frozen-lockfile` 與 `pnpm check`。`package.json` 加上 `packageManager: pnpm@12.4.2`（pnpm 12 會把它寫進 lockfile）與 `engines.node >=22.12`；CI 使用 Node 24
   - `.github/workflows/release.yml`：推送 `v*` tag 時，確認 tag 與 `theme.yaml` 版本一致，執行 `pnpm format:check` 與 `pnpm package`，再用 `gh release create` 上傳 zip 並自動產生 release notes

@@ -2,6 +2,14 @@
   <article class="article">
     <header class="article-header">
       <h1 class="article-title" th:text="${post.spec.title}">Post title</h1>
+      <!--/* 只顯示手動填寫的摘要；自動產生的摘要就是正文開頭，顯示會重複 */-->
+      <p
+        th:if="${post.spec.excerpt?.autoGenerate == false and not #strings.isEmpty(post.status.excerpt)}"
+        class="article-excerpt"
+        th:text="${post.status.excerpt}"
+      >
+        Excerpt
+      </p>
       <include src="post-meta.html" />
     </header>
     <img
