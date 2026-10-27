@@ -11,6 +11,7 @@ spec:
   repo: https://github.com/andycwt/halo-theme-lattice
   issues: https://github.com/andycwt/halo-theme-lattice/issues
   description: A clean, content-first Halo theme with configurable layout and colors.
+  logo: /themes/theme-lattice/assets/logo.svg
   customTemplates:
     page:
       - name: 關於頁

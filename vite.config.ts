@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { haloThemePlugin } from "@halo-dev/vite-plugin-halo-theme";
 
-// 目錄慣例（src → templates、public → templates/assets、base 為 /themes/<metadata.name>）由官方插件決定
+// 目錄慣例（src → templates、public → templates（public/assets 對應 Halo 的 /themes/<name>/assets）、base 為 /themes/<metadata.name>）由官方插件決定
 export default defineConfig({
   plugins: [haloThemePlugin()],
   build: {
