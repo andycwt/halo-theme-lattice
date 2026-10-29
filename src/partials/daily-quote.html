@@ -1,0 +1,31 @@
+<!--/*
+  首頁每日一句：從帶有 home.quotesTag 標籤的瞬間（plugin-moments）中，依「今天是一年中的第幾天」選一則，
+  依發布時間由舊到新輪流，每天換一句。沒有安裝插件或沒有符合的瞬間時不輸出
+*/-->
+<th:block
+  th:if="${theme.config.home?.quotesEnabled == true and pluginFinder.available('PluginMoments')}"
+>
+  <th:block
+    th:with="
+      quoteTag=${not #strings.isEmpty(theme.config.home.quotesTag) ? #strings.trim(theme.config.home.quotesTag) : '佳句'},
+      total=${momentFinder.list({page: 1, size: 1, tagName: quoteTag}).total}
+    "
+  >
+    <section th:if="${total > 0}" class="daily-quote" aria-labelledby="daily-quote-title">
+      <th:block
+        th:with="
+          index=${(#temporals.createNow().dayOfYear - 1) % total},
+          moment=${momentFinder.list({page: index + 1, size: 1, tagName: quoteTag, sort: {'spec.releaseTime,asc'}}).items[0]}
+        "
+      >
+        <h2 id="daily-quote-title" class="daily-quote-title" th:text="#{quote.daily}">
+          Quote of the day
+        </h2>
+        <include src="moment-body.html" />
+        <a class="widget-more" th:href="@{/moments(tag=${quoteTag})}" th:text="#{quote.viewAll}"
+          >View all</a
+        >
+      </th:block>
+    </section>
+  </th:block>
+</th:block>

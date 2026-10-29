@@ -285,6 +285,16 @@ spec:
           aspectRatio: 16/9
           width: 12rem
           value: ""
+        - $formkit: switch
+          name: quotesEnabled
+          label: 每日一句
+          help: 需要安裝「瞬間」插件。在首頁第一頁顯示一則帶有下方標籤的瞬間，依日期輪流，每天換一句。
+          value: false
+        - $formkit: text
+          name: quotesTag
+          label: 每日一句的標籤
+          help: 帶有這個標籤的瞬間會以引言樣式呈現：第一段原文、第二段翻譯、第三段出處。
+          value: 佳句
 
     - group: post
       label: 文章

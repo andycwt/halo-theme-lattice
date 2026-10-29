@@ -25,6 +25,8 @@
       : pageType == 'categories' ? {title: #messages.msg('categories.title'), description: null, type: 'website', path: '/categories', image: null, page: 1}
       : pageType == 'tags' ? {title: #messages.msg('tags.title'), description: null, type: 'website', path: '/tags', image: null, page: 1}
       : pageType == 'links' ? {title: linksTitle, description: null, type: 'website', path: '/links', image: null, page: 1}
+      : pageType == 'moments' ? (#arrays.isEmpty(param.tag) ? {title: title, description: null, type: 'website', path: '/moments', image: null, page: moments.page} : {title: param.tag[0], description: null, type: 'website', path: '/moments?tag=' + #uris.escapeQueryParam(param.tag[0]), image: null, page: moments.page})
+      : pageType == 'moment' ? {title: title, description: null, type: 'website', path: '/moments/' + moment.metadata.name, image: null, page: 1}
       : pageType == 'error' ? {title: #messages.msg(error.status == 404 ? 'error.notFound.title' : 'error.generic.title'), description: null, type: 'website', path: null, image: null, page: 1}
       : {title: null, description: (site.seo?.description ?: site.subtitle), type: 'website', path: '/', image: null, page: posts.page}
     },

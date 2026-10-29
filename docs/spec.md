@@ -82,6 +82,7 @@
 | 留言 | 官方 `plugin-comment-widget`，模板中放 `<halo:comment>`；沒有安裝插件時隱藏區塊 | #19 |
 | 搜尋 | 官方 `plugin-search-widget`，按鈕呼叫 `SearchWidget.open()`；`window.SearchWidget` 不存在時隱藏按鈕；用 CSS 變數把主色傳給搜尋組件 | #19 |
 | 友情連結 | 官方 `plugin-links`，提供 `/links` 路由 | #28 |
+| 瞬間、每日一句 | 官方 `plugin-moments`，提供 `/moments` 路由與 `momentFinder`；沒有安裝插件時首頁不顯示每日一句 | 2026-10-29 追加 |
 | 瀏覽器支援 | 近兩年的主流瀏覽器（Chrome、Edge、Safari、Firefox），不支援 IE 或舊版 Safari | 共識摘要 |
 | 無障礙 | 以 WCAG 2.1 AA 為目標：色彩對比、鍵盤操作、`prefers-reduced-motion` 時關閉轉場 | 共識摘要 |
 
@@ -149,6 +150,9 @@ halo-theme-lattice/
   - 依照插件的分組，用卡片格狀顯示，每張卡片包含頭像、名稱、描述
   - 底部顯示正文區塊（讓站長寫申請友鏈的方式），可以選擇顯示留言區
   - 不做隨機訪問、複製本站資訊等功能（留到第二版）
+- **`moments`、`moment`**（依賴 `plugin-moments`，2026-10-29 追加）
+  - 列表頁以卡片列出瞬間，標籤超過一個時顯示標籤篩選；以 `?tag=` 篩選時，頁面標題改為標籤名稱
+  - 帶有「每日一句標籤」（`home.quotesTag`）的瞬間以引言樣式呈現：第一段原文（襯線、較大）、第二段翻譯（淡色）、第三段出處（靠右、小字），不顯示發布時間
 
 ### 6.2 多語系（#7、#15）
 
@@ -208,6 +212,7 @@ halo-theme-lattice/
 
 - **導覽列**：Logo、站名、選單、搜尋（有插件才顯示）、語系切換、深淺色切換；吸頂顯示，捲動後縮小並加上半透明背景；手機上用漢堡選單
 - **首頁簡介區塊**：預設關閉；欄位包含大標題、副標題、背景圖（選填）
+- **每日一句**（2026-10-29 追加）：預設關閉；放在簡介區塊下方，只在首頁第一頁顯示。從帶有指定標籤的瞬間中，依「今天是一年中的第幾天」選一則，依發布時間由舊到新輪流，每天換一句；附「查看全部」連到 `/moments?tag=<標籤>`。不做跑馬燈或自動輪播（WCAG 2.2.2）
 - **文章列表樣式**（首頁、分類、標籤、作者頁共用）：純文字列表（預設）或卡片；選卡片時，沒有封面圖的文章自動退回文字樣式；兩種樣式共用同一個 fragment
 
 ### 6.8 SEO（#26）
@@ -230,7 +235,7 @@ halo-theme-lattice/
 | `sidebar` 側邊欄 | 左側邊欄元件清單（array：元件類型、是否吸頂、自訂 HTML 內容）；右側邊欄元件清單（同上）；公告內容；最新文章數量；標籤顯示數量 |
 | `profile` 個人資料 | 頭像、暱稱、簡介、社群連結（array） |
 | `style` 外觀 | 主色（color picker）；允許訪客自訂主色開關；預設深淺色模式；鎖定模式開關；正文字型（無襯線或襯線）；標題字型（跟隨正文或明體）；自訂字型 CSS 網址與 `font-family` |
-| `home` 首頁 | 簡介區塊開關、大標題、副標題、背景圖 |
+| `home` 首頁 | 簡介區塊開關、大標題、副標題、背景圖；每日一句開關（`quotesEnabled`）與標籤（`quotesTag`，預設「佳句」） |
 | `post` 文章 | 程式碼高亮開關；段落首行縮排開關；關於頁和友鏈頁是否顯示留言 |
 | `advanced` 進階 | View Transitions 開關；輸出頁面元資料開關；輸出結構化資料開關；預設分享圖 |
 
@@ -370,6 +375,13 @@ halo-theme-lattice/
   - 文章頁大標題與資訊列之間顯示摘要（`.article-excerpt`），使用 `--c-text-muted` 淡色、`--text-lg` 字級，和正文區隔
   - 只顯示手動填寫的摘要（`spec.excerpt.autoGenerate == false`）；自動產生的摘要就是正文開頭，顯示會重複。不另設開關，摘要留空即不顯示
   - 已在 Halo 2.26.0 驗證：手動摘要的文章顯示在標題下方，自動摘要的文章不輸出
+- [x] **追加：每日一句與瞬間頁面**（2026-10-29，使用者要求）
+  - 資料存在官方 plugin-moments（1.19.0，要求 Halo ≥ 2.26.0）：每句一則瞬間，標籤「佳句」，內容固定三段 `<p lang="en">原文</p><p>翻譯</p><p>— 出處</p>`。考慮過主題設定清單（幾百句難以編輯）與自製插件（工作量大），使用者選擇瞬間
+  - 新增 `moments.html`、`moment.html`、`partials/moment-body.html`、`partials/daily-quote.html`、`css/components/moments.css`；SEO 加上兩種頁面類型。插件自帶的預設模板引用主題的 `layout` fragment，Lattice 沒有，所以一定要由主題提供
+  - 每日一句：先用 `momentFinder.list({page: 1, size: 1, tagName})` 取得總數，再以 `(dayOfYear - 1) % total` 取第幾則（依 `spec.releaseTime` 由舊到新）。換日時間依伺服器時區
+  - 查證：plugin-moments 1.19.0 的 `listAllTags()`（`/moments` 路由會呼叫）以 `groupBy` + `concatMap` 統計標籤，「標籤 × 瞬間」超過約 256 筆且多個標籤交錯時會卡死，頁面永遠不回應。所以佳句只加一個標籤，不另加分類標籤
+  - 365 句佳句（勵志 150、愛情 100、名人語錄 115）是站點內容，不放進主題 repo；只收錄出處可查證的句子，避開常見的張冠李戴
+  - 已在 Halo 2.26.0 驗證：首頁區塊、列表頁、標籤篩選、單則頁、390px 版面；沒有安裝插件或關閉設定時不輸出
 - [x] **階段 10：CI 與發布**：GitHub Actions、自動發布流程、`README.md`、Halo 2.25.0 相容測試、無障礙檢查（2026-10-22）
   - `.github/workflows/ci.yml`：push 到 main 與 PR 時執行 `pnpm install --frozen-lockfile` 與 `pnpm check`。`package.json` 加上 `packageManager: pnpm@12.4.2`（pnpm 12 會把它寫進 lockfile）與 `engines.node >=22.12`；CI 使用 Node 24
   - `.github/workflows/release.yml`：推送 `v*` tag 時，確認 tag 與 `theme.yaml` 版本一致，執行 `pnpm format:check` 與 `pnpm package`，再用 `gh release create` 上傳 zip 並自動產生 release notes
@@ -384,7 +396,7 @@ halo-theme-lattice/
 
 ## 10. 範圍外（第二版以後）
 
-- 瞬間（moments）、相簿（photos）、作品集、時間軸等特色頁面
+- 相簿（photos）、作品集、時間軸等特色頁面（瞬間已於 2026-10-29 提前納入）
 - 一言、音樂播放器、天氣、日程等側邊欄元件；熱門文章（依賴瀏覽數）
 - 站長端的預設配色組合（訪客端的 8 個預設色票已在 #29 納入第一版）
 - Hero 輪播、打字機效果等首頁特效

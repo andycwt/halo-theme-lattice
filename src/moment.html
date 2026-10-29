@@ -1,0 +1,21 @@
+<!--/* 單則瞬間（由 plugin-moments 提供 /moments/{name} 路由與變數 moment、title） */-->
+<include src="layout.html" page="moment">
+  <th:block
+    th:with="quoteTag=${not #strings.isEmpty(theme.config.home?.quotesTag) ? #strings.trim(theme.config.home.quotesTag) : '佳句'}"
+  >
+    <header class="page-header">
+      <a class="page-kicker" th:href="@{/moments}" th:text="|← ${title}|">← Moments</a>
+    </header>
+    <article class="moment">
+      <h1 class="sr-only" th:text="${title}">Moment</h1>
+      <include src="moment-body.html" />
+      <footer class="moment-meta">
+        <time
+          th:datetime="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}"
+          th:text="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm')}"
+          >2026-01-01 00:00</time
+        >
+      </footer>
+    </article>
+  </th:block>
+</include>

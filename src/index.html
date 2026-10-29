@@ -28,6 +28,7 @@
     >
       Lattice
     </h1>
+    <include th:if="${posts.page <= 1}" src="daily-quote.html" />
   </th:block>
   <include src="post-list.html" />
   <th:block th:with="pageResult=${posts}"><include src="pagination.html" /></th:block>

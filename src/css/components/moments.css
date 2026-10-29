@@ -1,0 +1,105 @@
+/* 瞬間（plugin-moments）與首頁每日一句 */
+
+/* ---------- 引言樣式：第一段原文、第二段翻譯、第三段出處 ---------- */
+.quote {
+  & > p:first-child {
+    font-family: var(--font-serif);
+    font-size: var(--text-xl);
+    line-height: 1.5;
+    text-wrap: pretty;
+  }
+
+  & > p:nth-child(2) {
+    margin-top: var(--space-2);
+    color: var(--c-text-muted);
+    text-wrap: pretty;
+  }
+
+  & > p:nth-child(3) {
+    margin-top: var(--space-3);
+    color: var(--c-text-muted);
+    font-size: var(--text-sm);
+    text-align: end;
+  }
+}
+
+/* ---------- 首頁每日一句 ---------- */
+.daily-quote {
+  margin-bottom: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-bg);
+
+  @media (max-width: 639px) {
+    padding: var(--space-4);
+  }
+}
+
+.daily-quote-title {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--c-text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- 瞬間列表與單則 ---------- */
+.moment-tags {
+  margin-bottom: var(--space-5);
+
+  & .tag-pill[aria-current="page"] {
+    border-color: var(--c-accent);
+    color: var(--c-accent);
+  }
+}
+
+.moment-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: 0;
+  list-style: none;
+}
+
+.moment {
+  padding: var(--space-5);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  background: var(--c-bg);
+}
+
+.moment-media {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+
+  & img,
+  & video {
+    width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  & audio {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+.moment-meta {
+  margin-top: var(--space-3);
+  color: var(--c-text-muted);
+  font-size: var(--text-sm);
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--c-accent);
+      text-decoration: underline;
+    }
+  }
+}

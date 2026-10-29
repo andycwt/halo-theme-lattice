@@ -14,6 +14,7 @@
 @import "./components/toc.css" layer(components);
 @import "./components/content.css" layer(components);
 @import "./components/code.css" layer(components);
+@import "./components/moments.css" layer(components);
 @import "./components/site-footer.css" layer(components);
 @import "./utilities.css" layer(utilities);
 /* 不分層：需要覆蓋插件未分層的預設樣式 */
