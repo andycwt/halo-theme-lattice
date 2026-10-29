@@ -1,6 +1,7 @@
 <!--/*
-  首頁每日一句：從帶有 home.quotesTag 標籤的瞬間（plugin-moments）中，依「今天是一年中的第幾天」選一則，
-  依發布時間由舊到新輪流，每天換一句。沒有安裝插件或沒有符合的瞬間時不輸出
+  首頁每日一句：從帶有 home.quotesTag 標籤的瞬間（plugin-moments）中，依發布時間由舊到新輪流，每天換一句。
+  第 (年份 × 365 + 一年中的第幾天 − 1) % 總數 則：總數 365 時每年同一天是同一句；
+  每年新增 365 句時，新的一年接著輪到新的一批。沒有安裝插件或沒有符合的瞬間時不輸出
 */-->
 <th:block
   th:if="${theme.config.home?.quotesEnabled == true and pluginFinder.available('PluginMoments')}"
@@ -14,7 +15,8 @@
     <section th:if="${total > 0}" class="daily-quote" aria-labelledby="daily-quote-title">
       <th:block
         th:with="
-          index=${(#temporals.createNow().dayOfYear - 1) % total},
+          now=${#temporals.createNow()},
+          index=${(now.year * 365 + now.dayOfYear - 1) % total},
           moment=${momentFinder.list({page: index + 1, size: 1, tagName: quoteTag, sort: {'spec.releaseTime,asc'}}).items[0]}
         "
       >
