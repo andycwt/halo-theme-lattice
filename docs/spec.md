@@ -8,8 +8,8 @@
 ## 1. 給新 session 的快速導覽
 
 - **目前狀態**：階段 0–10 與追加的 #29 已完成（2026-10-22）。開發流程見 `docs/development.md`。
-- **進行中**：使用者在正式站（Halo 2.26.0）試用 0.1.1，試用回饋優先處理。
-- **已發布**：v0.1.1（2026-10-27，https://github.com/andycwt/halo-theme-lattice/releases/tag/v0.1.1），包含標題換行與標題字型、列表標題放大、段落縮排、主題 logo、文章頁摘要；v0.1.0（2026-10-22）。CI 與 release workflow 皆已在 GitHub 上實際通過。
+- **進行中**：使用者在正式站（Halo 2.26.0）試用 0.1.2，試用回饋優先處理。
+- **已發布**：v0.1.2（2026-10-29，https://github.com/andycwt/halo-theme-lattice/releases/tag/v0.1.2），包含首頁每日一句與瞬間頁面（plugin-moments）；v0.1.1（2026-10-27），包含標題換行與標題字型、列表標題放大、段落縮排、主題 logo、文章頁摘要；v0.1.0（2026-10-22）。CI 與 release workflow 皆已在 GitHub 上實際通過。
 - **下一步**：依試用回饋修正；頁面布局契約（`templates/layout.html`）維持第二版範圍（使用者確認，2026-10-22；Halo 後台主題詳情會顯示「缺失」，不影響運作）。
 - **工作方式**：每個階段完成後，先讓使用者確認，再進入下一個階段；並同步更新第 9 節的進度。使用者確認後才 commit。
 - **本機開發環境的狀態**（只存在本機 Docker volume，不在版控中）：
