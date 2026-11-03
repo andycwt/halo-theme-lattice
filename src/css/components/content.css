@@ -128,9 +128,11 @@
     display: grid;
     grid-template-columns: minmax(12rem, 38%) 1fr;
 
+    /* 封面維持 16:9 完整顯示，垂直置中；不隨標題高度拉長，避免生成的封面文字被裁掉 */
     & .post-item-cover {
-      aspect-ratio: auto;
-      min-height: 100%;
+      align-self: center;
+      margin-inline-start: var(--space-4);
+      border-radius: var(--radius-md);
     }
 
     & .post-item-body {
